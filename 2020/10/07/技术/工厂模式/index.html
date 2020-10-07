@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     
     <title itemprop="name">
-      单例模式 | yukino
+      工厂模式 | yukino
     </title>
     <!-- yukino:这里是网页标签的小图标 -->
     
@@ -435,7 +435,7 @@
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      单例模式</h1>
+      工厂模式</h1>
       <p class="entry-census">
         <span>
           <a href="/#">
@@ -447,7 +447,7 @@
         </span>
         <span class="bull">
         ·</span>
-        2020-10-6<span class="bull">
+        2020-10-7<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -461,192 +461,246 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <h1 id="1-饿汉式-静态常量"><a href="#1-饿汉式-静态常量" class="headerlink" title="1.饿汉式(静态常量)"></a>1.饿汉式(静态常量)</h1><pre><code class="Java">package blog.singleton;
+          <h1 id="1-简单工厂模式"><a href="#1-简单工厂模式" class="headerlink" title="1.简单工厂模式"></a>1.简单工厂模式</h1><p>看一个披萨的项目:要便于披萨种类的扩展，要便于维护</p>
+<ol>
+<li>披萨的种类很多(比如 GreekPizz、CheesePizz 等)</li>
+<li>披萨的制作有 prepare，bake, cut, box</li>
+<li>完成披萨店订购功能。</li>
+</ol>
+<p><strong>思路</strong></p>
+<ol>
+<li>把创建 Pizza 对象封装到一个类中，这样我们有新的 Pizza 种类时，只需要修改该类就可，其它有创建到 Pizza 对象的代码就不需要修改了</li>
+</ol>
+<p><strong>UML</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201007225808.png" alt="image"></p>
+<pre><code class="Java">package blog.factory;
+import blog.factory.pizza.CheesePizza;
+import blog.factory.pizza.GreekPizza;
+import blog.factory.pizza.Pizza;
 
-public class SingletonTest {
+public class SimpleFactory {
+    //简单工厂模式
+    public Pizza createPizza(String orderType) {
+        Pizza pizza = null;
+        if (orderType.equals(&quot;奶酪&quot;)) {
+            pizza = new CheesePizza();
+            pizza.setName(&quot;奶酪披萨&quot;);
+        } else if (orderType.equals(&quot;希腊&quot;)) {
+            pizza = new GreekPizza();
+            pizza.setName(&quot;希腊披萨&quot;);
+        }
+        return pizza;
+    }
+    //简单工厂模式，静态工厂模式
+    public static Pizza createPizza2(String orderType) {
+        Pizza pizza = null;
+        if (orderType.equals(&quot;奶酪&quot;)) {
+            pizza = new CheesePizza();
+            pizza.setName(&quot;奶酪披萨&quot;);
+        } else if (orderType.equals(&quot;希腊&quot;)) {
+            pizza = new GreekPizza();
+            pizza.setName(&quot;希腊披萨&quot;);
+        }
+        return pizza;
+    }
+}
+
+</code></pre>
+<pre><code class="Java">package blog.factory;
+import blog.factory.pizza.Pizza;
+
+public class OrderPizza {
+    private SimpleFactory simpleFactory;
+
+    public OrderPizza(SimpleFactory simpleFactory) {
+        this.simpleFactory = simpleFactory;
+    }
+
+    public void makePizza(String orderType) {
+        Pizza pizza = simpleFactory.createPizza(orderType);
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
+    }
+}
+</code></pre>
+<pre><code class="Java">package blog.factory;
+
+public class Test {
     public static void main(String[] args) {
-        Singleton singleton1 = Singleton.getInstance();
-        Singleton singleton2 = Singleton.getInstance();
-        System.out.println(singleton1 == singleton2);
-    }
-}
-
-class Singleton {
-    //  1.构造器私有化，防止外部new
-    private Singleton() {}
-    //  2.在装载时，完成实例化
-    private final static Singleton instance = new Singleton();
-    //  3.通过公有静态方法，返回实例对象
-    public static Singleton getInstance() {
-        return instance;
+        OrderPizza orderPizza = new OrderPizza(new SimpleFactory());
+        orderPizza.makePizza(&quot;希腊&quot;);
     }
 }
 </code></pre>
-<p><strong>优点</strong></p>
-<ol>
-<li>类装载的时候就完成实例化。避免了线程同步问题。</li>
-</ol>
-<p><strong>缺点</strong></p>
-<ol>
-<li>在类装载的时候就完成实例化，没有达到LazyLoading的效果。如果从始至终从未使用过这个实例，则<br>会造成内存的浪费</li>
-<li>这种方式基于classloder机制避免了多线程的同步问题，不过，instance在类装载时就实例化，在单例模式中大 多数都是调用 getInstance 方法，但是导致类装载的原因有很多种，因此不能确定有其他的方式(或者其他的静 态方法)导致类装载，这时候初始化 instance 就没有达到 lazy loading 的效果</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>这种单例模式可用，可能造成内存浪费</li>
-</ol>
-<h1 id="2-饿汉式-静态代码块"><a href="#2-饿汉式-静态代码块" class="headerlink" title="2.饿汉式(静态代码块)"></a>2.饿汉式(静态代码块)</h1><pre><code class="Java">class Singleton {
-    private Singleton() {}
-    private static Singleton instance;
-    {
-        instance = new Singleton();
+<pre><code class="Java">package blog.factory.pizza;
+
+public abstract class Pizza {
+    private String name;
+    //不同类型制作材料的准备不同
+    public abstract void prepare();
+    public void bake() {
+        System.out.println(name + &quot;baking&quot;);
+    }
+    public void cut() {
+        System.out.println(name + &quot;cutting&quot;);
+    }
+    public void box() {
+        System.out.println(name + &quot;boxing&quot;);
     }
 
-    public static Singleton getInstance() {
-        return instance;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 </code></pre>
-<p><strong>优点缺点</strong><br>这种方式和上面的方式其实类似，只不过将类实例化的过程放在了静态代码块中，也是在类装载的时候，就执 行静态代码块中的代码，初始化类的实例。优缺点和上面是一样的。</p>
-<p><strong>结论</strong><br>这种单例模式可用，但是可能造成内存浪费</p>
-<h1 id="3-懒汉式-线程不安全"><a href="#3-懒汉式-线程不安全" class="headerlink" title="3.懒汉式(线程不安全)"></a>3.懒汉式(线程不安全)</h1><pre><code class="Java">class Singleton {
-    private static Singleton instance;
-    private Singleton(){}
-    public static Singleton getInstance() {
-        if (instance == null) {
-            instance = new Singleton();
+<pre><code class="Java">package blog.factory.pizza;
+
+public class GreekPizza extends Pizza {
+    @Override
+    public void prepare() {
+        System.out.println(&quot;给希腊披萨准备原材料&quot;);
+    }
+}
+</code></pre>
+<pre><code class="Java">package blog.factory.pizza;
+
+public class CheesePizza extends Pizza{
+    @Override
+    public void prepare() {
+        System.out.println(&quot;制作奶酪披萨，准备材料&quot;);
+    }
+}
+
+</code></pre>
+<h1 id="2-工厂方法模式"><a href="#2-工厂方法模式" class="headerlink" title="2.工厂方法模式"></a>2.工厂方法模式</h1><p><strong>需求</strong></p>
+<ol>
+<li>披萨项目新的需求:客户在点披萨时，可以点不同口味的披萨，比如 北京的奶酪 pizza、北京的希腊 pizza 或 者是伦敦的奶酪 pizza、伦敦的希腊 pizza。</li>
+</ol>
+<p><strong>思路</strong></p>
+<ol>
+<li>使用简单工厂模式，创建不同的简单工厂类，比如 BJPizzaSimpleFactory、LDPizzaSimpleFactory 等等.从当前<br>这个案例来说，也是可以的，但是考虑到项目的规模，以及软件的可维护性、可扩展性并不是特别好</li>
+<li>工厂方法模式设计方案:将披萨项目的实例化功能抽象成抽象方法，在不同的口味点餐子类中具体实现。</li>
+<li>工厂方法模式:定义了一个创建对象的抽象方法，由子类决定要实例化的类。工厂方法模式将对象的实例 化推迟到子类。<br><strong>UML</strong></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/Snipaste_2020-10-07_23-02-24.jpg" alt="image"><br><strong>CODE</strong></p>
+<pre><code class="Java">public abstract class PizzaFactory {
+    public abstract Pizza createPizza(String orderType);
+}
+</code></pre>
+<pre><code class="Java">public class BJPizzaFactory  extends PizzaFactory{
+    @Override
+    public Pizza createPizza(String orderType) {
+        Pizza pizza = null;
+        if (orderType.equals(&quot;cheese&quot;)) {
+            pizza = new BJGreekPizza();
+        } else if (orderType.equals(&quot;greek&quot;)) {
+            pizza = new BJGreekPizza();
         }
-        return instance;
+        return pizza;
     }
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>起到了LazyLoading的效果，但是只能在单线程下使用。</li>
-<li>如果在多线程下，一个线程进入了if(singleton==null)判断语句块，还未来得及往下执行，另一个线程也通过<br>了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>实际开发中，不要使用这种方式.</li>
-</ol>
-<h1 id="4-懒汉式-线程安全，同步方法，不推荐使用"><a href="#4-懒汉式-线程安全，同步方法，不推荐使用" class="headerlink" title="4.懒汉式(线程安全，同步方法，不推荐使用)"></a>4.懒汉式(线程安全，同步方法，不推荐使用)</h1><pre><code class="Java">class Singleton {
-    private static Singleton instance;
-    private Singleton(){};
-    //提供一个静态的公有方法，加入同步处理的代码，解决线程安全问题
-    public static synchronized Singleton getInstance() {
-        if (instance == null) {
-            instance = new Singleton();
+<pre><code class="Java">public class LDPizzaFactory extends PizzaFactory{
+    @Override
+    public Pizza createPizza(String orderType) {
+        Pizza pizza = null;
+        if (orderType.equals(&quot;cheese&quot;)) {
+            pizza = new LDCheesePizza();
+        } else if (orderType.equals(&quot;greek&quot;)) {
+            pizza = new LDGreekOPizza();
         }
-        return instance;
+        return pizza;
     }
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>解决了线程安全问题</li>
-<li>效率太低了，每个线程在想获得类的实例时候，执行getInstance()方法都要进行同步。而其实这个方法只执行<br>一次实例化代码就够了，后面的想获得该类实例，直接 return 就行了。方法进行同步效率太低</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>实际开发中，<strong>不推荐</strong>使用这种方式</li>
-</ol>
-<h1 id="5-懒汉式-线程安全，同步代码块，不推荐"><a href="#5-懒汉式-线程安全，同步代码块，不推荐" class="headerlink" title="5. 懒汉式(线程安全，同步代码块，不推荐)"></a>5. 懒汉式(线程安全，同步代码块，不推荐)</h1><pre><code class="Java">class Singleton {
-    private static Singleton instance;
-    private Singleton(){};
-    public static  Singleton getInstance() {
-        if (instance == null) {
-            synchronized (Singleton.class) {
-                instance = new Singleton();
-            }
-        }
-        return instance;
-    }
-}
-</code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>与上一个模式同样，解决了线程安全问题，但效率太低了</li>
-</ol>
-<h1 id="6-双重检查-推荐使用"><a href="#6-双重检查-推荐使用" class="headerlink" title="6.双重检查(推荐使用)"></a>6.双重检查(推荐使用)</h1><pre><code class="Java">class Singleton {
-    private static volatile Singleton instance;//volatile 很重要
-    private Singleton() {}
-    //加入双重检查代码，解决线程安全问题, 同时解决懒加载问题,同时保证了效率, 推荐使用
-    public static synchronized Singleton getInstance() {
-        if (instance == null) {
-            synchronized (Singleton.class) {
-                if (instance == null) {
-                    instance = new Singleton();
-                }
-            }
-        }
-        return instance;
-    }
-}
-</code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>Double-Check 概念是多线程开发中常使用到的，如代码中所示，我们进行了两次 if (singleton == null)检查，这 样就可以保证线程安全了。</li>
-<li>这样，实例化代码只用执行一次，后面再次访问时，判断if(singleton==null)，直接return实例化对象，也避 免的反复进行方法同步.</li>
-<li>线程安全;延迟加载;效率较高</li>
-<li>volatile 禁止指令重排</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>在实际开发中，<strong>推荐</strong>使用这种单例设计模式</li>
-</ol>
-<h1 id="7-静态内部类-推荐"><a href="#7-静态内部类-推荐" class="headerlink" title="7.静态内部类(推荐)"></a>7.静态内部类(推荐)</h1><pre><code class="Java">class Singleton {
-    private static volatile Singleton instance;//volatile 很重要
-    private Singleton() {}
+<pre><code class="Java">public class Order {
+    private PizzaFactory pizzaFactory;
 
-    private static class SingletonInstance {
-        private static final Singleton INSTANCE = new Singleton();
+    public Order(PizzaFactory pizzaFactory) {
+        this.pizzaFactory = pizzaFactory;
     }
-
-    public static synchronized  Singleton getInstance() {
-        return SingletonInstance.INSTANCE;
+    public void makePizza(String type) {
+        Pizza pizza = pizzaFactory.createPizza(type);
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
     }
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>这种方式采用了类装载的机制来保证初始化实例时只有一个线程。</li>
-<li>静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才<br>会装载 SingletonInstance 类，从而完成 Singleton 的实例化。</li>
-<li>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性，在类进行<br>初始化时，别的线程是无法进入的。</li>
-<li>避免了线程不安全，利用静态内部类特点实现延迟加载，效率高</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>推荐使用</li>
-</ol>
-<h1 id="8-枚举（推荐使用）"><a href="#8-枚举（推荐使用）" class="headerlink" title="8.枚举（推荐使用）"></a>8.枚举（推荐使用）</h1><pre><code class="Java">package blog.singleton;
-
-public class SingletonTest {
+<pre><code class="Java">public class Client  {
     public static void main(String[] args) {
-        Singleton singleton1 = Singleton.INSTANCE;
-        Singleton singleton2 = Singleton.INSTANCE;
-        System.out.println(singleton1 == singleton2);
-        singleton1.sayOk();
+        Order order = new Order(new LDPizzaFactory());
+        order.makePizza(&quot;greek&quot;);
     }
-}
-//
-enum Singleton {
-    INSTANCE;//枚举实例
-    public void sayOk() { 
-        System.out.println(&quot;ok~&quot;);
-    }
-
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
+<h1 id="3-抽象工厂模式"><a href="#3-抽象工厂模式" class="headerlink" title="3.抽象工厂模式"></a>3.抽象工厂模式</h1><p><strong>思路</strong></p>
 <ol>
-<li>这借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建 新的对象。</li>
-<li>这种方式是EffectiveJava作者JoshBloch提倡的方式</li>
+<li>将工厂抽象成两层，AbsFactory(抽象工厂) 和 具体实现的工厂子类，完成了对地点BJ和LD的区分</li>
 </ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>推荐使用</li>
-</ol>
-<h1 id="9-使用场景"><a href="#9-使用场景" class="headerlink" title="9.使用场景"></a>9.使用场景</h1><p>需要频繁的进行创建和销毁的对象、创建对象时耗时过多或耗费资源过多(即:重量级<br>对象)，但又经常用到的对象、工具类对象、频繁访问数据库或文件的对象(比如数据源、session 工厂等)</p>
+<p><strong>UML</strong><br><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/Snipaste_2020-10-07_23-03-38.jpg" alt="image"></p>
+<p><strong>CODE</strong></p>
+<pre><code class="Java">public interface  AbsFactory {
+    public  Pizza createPizza(String orderType);
+}
+
+</code></pre>
+<pre><code class="Java">public class BJFactory implements AbsFactory {
+    @Override
+    public Pizza createPizza(String orderType) {
+        Pizza pizza = null;
+        if (orderType.equals(&quot;cheese&quot;)) {
+            pizza = new BJCheesePizza();
+        } else if (orderType.equals(&quot;greek&quot;)) {
+            pizza = new BJGreekPizza();
+        }
+        return pizza;
+    }
+}
+</code></pre>
+<pre><code class="Java">public class LDFactory implements AbsFactory {
+    @Override
+    public Pizza createPizza(String orderType) {
+        Pizza pizza = null;
+        if (orderType.equals(&quot;cheese&quot;)) {
+            pizza = new LDCheesePizza();
+        } else if (orderType.equals(&quot;greek&quot;)) {
+            pizza = new LDGreekOPizza();
+        }
+        return pizza;
+    }
+}
+</code></pre>
+<pre><code class="Java">public class Order {
+    private AbsFactory absFactory;
+
+    public Order(AbsFactory absFactory) {
+        this.absFactory = absFactory;
+    }
+    public void makePizza(String type) {
+        Pizza pizza = absFactory.createPizza(type);
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
+    }
+}
+</code></pre>
+<pre><code class="Java">public class Client {
+    public static void main(String[] args) {
+        Order order = new Order(new LDFactory());
+        order.makePizza(&quot;cheese&quot;);
+    }
+}
+
+</code></pre>
 
         </div>
         <!-- .entry-content -->
@@ -676,9 +730,9 @@ enum Singleton {
       <section class="post-squares nextprev">
         
           
-            <div class="post-nepre full previous">
+            <div class="post-nepre half previous">
           
-            <a href="/2020/10/07/技术/工厂模式/" rel="prev">
+            <a href="/2020/10/07/技术/原型模式/" rel="prev">
               <div class="background">
                 <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
               </div>
@@ -686,12 +740,29 @@ enum Singleton {
               Previous Post</span>
               <div class="info">
                 <h3>
-                工厂模式</h3>
+                原型模式</h3>
                 <hr>
               </div>
             </a>
           </div>
         
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2020/10/06/技术/单例模式/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                单例模式</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
         
       </section>
       

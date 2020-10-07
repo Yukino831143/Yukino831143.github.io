@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     
     <title itemprop="name">
-      单例模式 | yukino
+      原型模式 | yukino
     </title>
     <!-- yukino:这里是网页标签的小图标 -->
     
@@ -435,7 +435,7 @@
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      单例模式</h1>
+      原型模式</h1>
       <p class="entry-census">
         <span>
           <a href="/#">
@@ -447,7 +447,7 @@
         </span>
         <span class="bull">
         ·</span>
-        2020-10-6<span class="bull">
+        2020-10-7<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -461,192 +461,164 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <h1 id="1-饿汉式-静态常量"><a href="#1-饿汉式-静态常量" class="headerlink" title="1.饿汉式(静态常量)"></a>1.饿汉式(静态常量)</h1><pre><code class="Java">package blog.singleton;
+          <p><strong>基本介绍</strong></p>
+<ol>
+<li>原型模式(Prototype模式)是指:用原型实例指定创建对象的种类，并且通过拷贝这些原型，创建新的对象</li>
+</ol>
+<h1 id="1-基本类型的拷贝"><a href="#1-基本类型的拷贝" class="headerlink" title="1.基本类型的拷贝"></a>1.基本类型的拷贝</h1><p><strong>CODE</strong></p>
+<pre><code class="Java">public class Sheep implements Cloneable{
+    public String name;
+    public int age;
+    public Sheep friend;//是对象, 克隆是会如何处理, 默认是浅拷贝
 
-public class SingletonTest {
-    public static void main(String[] args) {
-        Singleton singleton1 = Singleton.getInstance();
-        Singleton singleton2 = Singleton.getInstance();
-        System.out.println(singleton1 == singleton2);
-    }
-}
-
-class Singleton {
-    //  1.构造器私有化，防止外部new
-    private Singleton() {}
-    //  2.在装载时，完成实例化
-    private final static Singleton instance = new Singleton();
-    //  3.通过公有静态方法，返回实例对象
-    public static Singleton getInstance() {
-        return instance;
-    }
-}
-</code></pre>
-<p><strong>优点</strong></p>
-<ol>
-<li>类装载的时候就完成实例化。避免了线程同步问题。</li>
-</ol>
-<p><strong>缺点</strong></p>
-<ol>
-<li>在类装载的时候就完成实例化，没有达到LazyLoading的效果。如果从始至终从未使用过这个实例，则<br>会造成内存的浪费</li>
-<li>这种方式基于classloder机制避免了多线程的同步问题，不过，instance在类装载时就实例化，在单例模式中大 多数都是调用 getInstance 方法，但是导致类装载的原因有很多种，因此不能确定有其他的方式(或者其他的静 态方法)导致类装载，这时候初始化 instance 就没有达到 lazy loading 的效果</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>这种单例模式可用，可能造成内存浪费</li>
-</ol>
-<h1 id="2-饿汉式-静态代码块"><a href="#2-饿汉式-静态代码块" class="headerlink" title="2.饿汉式(静态代码块)"></a>2.饿汉式(静态代码块)</h1><pre><code class="Java">class Singleton {
-    private Singleton() {}
-    private static Singleton instance;
-    {
-        instance = new Singleton();
+    public Sheep(String name, int age) {
+        this.name = name;
+        this.age = age;
     }
 
-    public static Singleton getInstance() {
-        return instance;
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
 </code></pre>
-<p><strong>优点缺点</strong><br>这种方式和上面的方式其实类似，只不过将类实例化的过程放在了静态代码块中，也是在类装载的时候，就执 行静态代码块中的代码，初始化类的实例。优缺点和上面是一样的。</p>
-<p><strong>结论</strong><br>这种单例模式可用，但是可能造成内存浪费</p>
-<h1 id="3-懒汉式-线程不安全"><a href="#3-懒汉式-线程不安全" class="headerlink" title="3.懒汉式(线程不安全)"></a>3.懒汉式(线程不安全)</h1><pre><code class="Java">class Singleton {
-    private static Singleton instance;
-    private Singleton(){}
-    public static Singleton getInstance() {
-        if (instance == null) {
-            instance = new Singleton();
-        }
-        return instance;
+<pre><code class="Java">public class Client {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Sheep sheep1 = new Sheep(&quot;zhangsan&quot;,1);
+        Sheep sheep2 = new Sheep(&quot;lisi&quot;, 2);
+        sheep1.friend = sheep2;
+        sheep2.friend = sheep1;
+
+        Sheep sheep3 = (Sheep)sheep1.clone();
+        System.out.println(sheep3 == sheep1);//false
+        System.out.println(sheep3.friend == sheep1.friend);//true
     }
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
+<p><strong>注意</strong></p>
 <ol>
-<li>起到了LazyLoading的效果，但是只能在单线程下使用。</li>
-<li>如果在多线程下，一个线程进入了if(singleton==null)判断语句块，还未来得及往下执行，另一个线程也通过<br>了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式</li>
+<li>成员变量为对象时，克隆是浅拷贝，使用默认拷贝是拷贝的地址</li>
 </ol>
-<p><strong>结论</strong></p>
+<h1 id="2-深拷贝"><a href="#2-深拷贝" class="headerlink" title="2.深拷贝"></a>2.深拷贝</h1><p><strong>基本介绍</strong></p>
 <ol>
-<li>实际开发中，不要使用这种方式.</li>
+<li>复制对象的所有基本数据类型的成员变量值</li>
+<li>为所有引用数据类型的成员变量申请存储空间，并复制每个引用数据类型成员变量所引用的对象，直到该对象<br>可达的所有对象。也就是说，对象进行深拷贝要对整个对象(包括对象的引用类型)进行拷贝</li>
+<li>深拷贝实现方式1:<strong>重写clone方法</strong>来实现深拷贝</li>
+<li>深拷贝实现方式2:通过<strong>对象序列化</strong>实现深拷贝(推荐)</li>
 </ol>
-<h1 id="4-懒汉式-线程安全，同步方法，不推荐使用"><a href="#4-懒汉式-线程安全，同步方法，不推荐使用" class="headerlink" title="4.懒汉式(线程安全，同步方法，不推荐使用)"></a>4.懒汉式(线程安全，同步方法，不推荐使用)</h1><pre><code class="Java">class Singleton {
-    private static Singleton instance;
-    private Singleton(){};
-    //提供一个静态的公有方法，加入同步处理的代码，解决线程安全问题
-    public static synchronized Singleton getInstance() {
-        if (instance == null) {
-            instance = new Singleton();
-        }
-        return instance;
+<p><strong>CODE</strong></p>
+<pre><code class="Java">package blog.prototype;
+
+import java.io.Serializable;
+
+public class DeepCloneableTarget implements Serializable, Cloneable {
+
+    public String cloneName;
+    public String cloneClass;
+
+    public DeepCloneableTarget(String cloneName, String cloneClass) {
+        this.cloneName = cloneName;
+        this.cloneClass = cloneClass;
+    }
+
+    //因为该类的属性，都是 String , 因此我们这里使用默认的 clone 完成即可
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>解决了线程安全问题</li>
-<li>效率太低了，每个线程在想获得类的实例时候，执行getInstance()方法都要进行同步。而其实这个方法只执行<br>一次实例化代码就够了，后面的想获得该类实例，直接 return 就行了。方法进行同步效率太低</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>实际开发中，<strong>不推荐</strong>使用这种方式</li>
-</ol>
-<h1 id="5-懒汉式-线程安全，同步代码块，不推荐"><a href="#5-懒汉式-线程安全，同步代码块，不推荐" class="headerlink" title="5. 懒汉式(线程安全，同步代码块，不推荐)"></a>5. 懒汉式(线程安全，同步代码块，不推荐)</h1><pre><code class="Java">class Singleton {
-    private static Singleton instance;
-    private Singleton(){};
-    public static  Singleton getInstance() {
-        if (instance == null) {
-            synchronized (Singleton.class) {
-                instance = new Singleton();
+<pre><code class="Java">package blog.prototype;
+
+import java.io.*;
+
+public class DeepProtoType implements Serializable, Cloneable {
+    public String name;
+    public DeepCloneableTarget deepCloneableTarget;
+    //深拷贝 - 方式 1 使用clone 方法
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Object deep = null;
+        //这里完成对基本数据类型(属性)和 String 的克隆
+        deep = super.clone();
+        //对引用类型的属性，进行单独处理
+        DeepProtoType deepProtoType = (DeepProtoType)deep;
+        deepProtoType.deepCloneableTarget = (DeepCloneableTarget)deepCloneableTarget.clone();
+        return deepProtoType;
+    }
+
+    //深拷贝 - 方式 2 通过对象的序列化实现 (推荐)
+    public Object deepClone() {
+        //创建流对象
+        ByteArrayOutputStream bos = null;
+        ObjectOutputStream oos = null;
+        ByteArrayInputStream bis = null;
+        ObjectInputStream ois = null;
+
+        DeepProtoType copyObj = null;
+        try {
+            //序列化
+            bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(this); //当前这个对象以对象流的方式输出
+
+            //反序列化
+            bis = new ByteArrayInputStream(bos.toByteArray());
+            ois = new ObjectInputStream(bis);
+            copyObj = (DeepProtoType)ois.readObject();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bos.close();
+                oos.close();
+                bis.close();
+                ois.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         }
-        return instance;
+        return copyObj;
+
     }
 }
+
+</code></pre>
+<pre><code class="Java">package blog.prototype;
+
+public class Client {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        DeepCloneableTarget deepCloneableTarget = new DeepCloneableTarget(&quot;cloneName&quot;,&quot;cloneClass&quot;);
+        DeepProtoType deepProtoType = new DeepProtoType();
+        deepProtoType.name = &quot;DeepProtoType&quot;;
+        deepProtoType.deepCloneableTarget = deepCloneableTarget;
+
+        DeepProtoType deepProtoType1 = (DeepProtoType) deepProtoType.clone();
+        System.out.println(deepProtoType1.name);
+        System.out.println(deepProtoType1.deepCloneableTarget.cloneName);
+        System.out.println(deepProtoType.deepCloneableTarget == deepProtoType1.deepCloneableTarget);//false
+
+        DeepProtoType deepProtoType2 = (DeepProtoType) deepProtoType.deepClone();
+        System.out.println(deepProtoType2.name);
+        System.out.println(deepProtoType2.deepCloneableTarget.cloneName);
+        System.out.println(deepProtoType.deepCloneableTarget == deepProtoType2.deepCloneableTarget);//false
+
+    }
+}
+
 </code></pre>
 <p><strong>优缺点</strong></p>
 <ol>
-<li>与上一个模式同样，解决了线程安全问题，但效率太低了</li>
+<li>创建新的对象比较复杂时，可以利用原型模式简化对象的创建过程，同时也能够提高效率</li>
+<li>不用重新初始化对象，而是动态地获得对象运行时的状态</li>
+<li>如果原始对象发生变化(增加或者减少属性)，其它克隆对象的也会发生相应的变化，无需修改代码</li>
+<li>在实现深克隆的时候可能需要比较复杂的代码</li>
+<li>缺点:需要为每一个类配备一个克隆方法，这对全新的类来说不是很难，但对已有的类进行改造时，需要修改<br>其源代码，违背了 ocp 原则，这点请注意.</li>
 </ol>
-<h1 id="6-双重检查-推荐使用"><a href="#6-双重检查-推荐使用" class="headerlink" title="6.双重检查(推荐使用)"></a>6.双重检查(推荐使用)</h1><pre><code class="Java">class Singleton {
-    private static volatile Singleton instance;//volatile 很重要
-    private Singleton() {}
-    //加入双重检查代码，解决线程安全问题, 同时解决懒加载问题,同时保证了效率, 推荐使用
-    public static synchronized Singleton getInstance() {
-        if (instance == null) {
-            synchronized (Singleton.class) {
-                if (instance == null) {
-                    instance = new Singleton();
-                }
-            }
-        }
-        return instance;
-    }
-}
-</code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>Double-Check 概念是多线程开发中常使用到的，如代码中所示，我们进行了两次 if (singleton == null)检查，这 样就可以保证线程安全了。</li>
-<li>这样，实例化代码只用执行一次，后面再次访问时，判断if(singleton==null)，直接return实例化对象，也避 免的反复进行方法同步.</li>
-<li>线程安全;延迟加载;效率较高</li>
-<li>volatile 禁止指令重排</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>在实际开发中，<strong>推荐</strong>使用这种单例设计模式</li>
-</ol>
-<h1 id="7-静态内部类-推荐"><a href="#7-静态内部类-推荐" class="headerlink" title="7.静态内部类(推荐)"></a>7.静态内部类(推荐)</h1><pre><code class="Java">class Singleton {
-    private static volatile Singleton instance;//volatile 很重要
-    private Singleton() {}
-
-    private static class SingletonInstance {
-        private static final Singleton INSTANCE = new Singleton();
-    }
-
-    public static synchronized  Singleton getInstance() {
-        return SingletonInstance.INSTANCE;
-    }
-}
-</code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>这种方式采用了类装载的机制来保证初始化实例时只有一个线程。</li>
-<li>静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才<br>会装载 SingletonInstance 类，从而完成 Singleton 的实例化。</li>
-<li>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性，在类进行<br>初始化时，别的线程是无法进入的。</li>
-<li>避免了线程不安全，利用静态内部类特点实现延迟加载，效率高</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>推荐使用</li>
-</ol>
-<h1 id="8-枚举（推荐使用）"><a href="#8-枚举（推荐使用）" class="headerlink" title="8.枚举（推荐使用）"></a>8.枚举（推荐使用）</h1><pre><code class="Java">package blog.singleton;
-
-public class SingletonTest {
-    public static void main(String[] args) {
-        Singleton singleton1 = Singleton.INSTANCE;
-        Singleton singleton2 = Singleton.INSTANCE;
-        System.out.println(singleton1 == singleton2);
-        singleton1.sayOk();
-    }
-}
-//
-enum Singleton {
-    INSTANCE;//枚举实例
-    public void sayOk() { 
-        System.out.println(&quot;ok~&quot;);
-    }
-
-}
-</code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>这借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建 新的对象。</li>
-<li>这种方式是EffectiveJava作者JoshBloch提倡的方式</li>
-</ol>
-<p><strong>结论</strong></p>
-<ol>
-<li>推荐使用</li>
-</ol>
-<h1 id="9-使用场景"><a href="#9-使用场景" class="headerlink" title="9.使用场景"></a>9.使用场景</h1><p>需要频繁的进行创建和销毁的对象、创建对象时耗时过多或耗费资源过多(即:重量级<br>对象)，但又经常用到的对象、工具类对象、频繁访问数据库或文件的对象(比如数据源、session 工厂等)</p>
 
         </div>
         <!-- .entry-content -->
@@ -675,15 +647,16 @@ enum Singleton {
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
+        
           
-            <div class="post-nepre full previous">
+            <div class="post-nepre full next">
           
-            <a href="/2020/10/07/技术/工厂模式/" rel="prev">
+            <a href="/2020/10/07/技术/工厂模式/" rel="next">
               <div class="background">
                 <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
               </div>
               <span class="label">
-              Previous Post</span>
+              Next Post</span>
               <div class="info">
                 <h3>
                 工厂模式</h3>
@@ -691,7 +664,6 @@ enum Singleton {
               </div>
             </a>
           </div>
-        
         
       </section>
       
