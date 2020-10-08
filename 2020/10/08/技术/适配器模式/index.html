@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     
     <title itemprop="name">
-      archive_a: 2020 | yukino
+      适配器模式 | yukino
     </title>
     <!-- yukino:这里是网页标签的小图标 -->
     
@@ -424,117 +424,269 @@
   </div>
 </header>
 
-      <div class="blank" style="padding-top: 75px;">
-</div>
-<div id="content" class="site-content">
-  <div id="main">
-    <header class="page-header">
-      <h1 class="cat-title">
-      归档</h1>
-      <span class="cat-des">
-        <p>
-        Archives</p>
-      </span>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <!--文章详情页的banner从使用封面图片，修改为自定义，使用md文章中的属性 banner 20200712-->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg);" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      适配器模式</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/#">
+            <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico">
+          </a>
+        </span>
+        <span>
+          <a href="/#">Yukino</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2020-10-8<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
-    <div id="main-part">
-      <article class="art">
-        <div class="art-main">
-          <div class="art-content">
-            <div id="archives">
-              <p style="text-align:right;">
-                [<span id="al_expand_collapse" style="cursor: s-resize;">
-                全部展开/收缩</span>
-              ]</p>
-              
-              
-              
-              
-              
-                
-                <h3 class="al_year">2020年</h3>
-              
-              
-                
-                <ul class="al_mon_list">
-                  <li class="al_li">
-                    <span class="al_mon" style="cursor: s-resize;">
-                      10月(<span id="post-num">
-                      3</span>
-                    篇文章)</span>
-                    <ul class="al_post_list" style="">
-              
-                      <li>
-                        <a href="/2020/10/08/技术/适配器模式/">
-                          <span style="color:#0bf;">
-                          08日23:30:00</span>
-                          适配器模式
-                        </a>
-                      </li>
-                      
-              
-              
-              
-              
-              
-                      <li>
-                        <a href="/2020/10/08/技术/建造者模式/">
-                          <span style="color:#0bf;">
-                          08日11:30:00</span>
-                          建造者模式
-                        </a>
-                      </li>
-                      
-              
-              
-              
-              
-              
-                      <li>
-                        <a href="/2020/10/07/技术/原型模式/">
-                          <span style="color:#0bf;">
-                          07日22:28:00</span>
-                          原型模式
-                        </a>
-                      </li>
-                      
-              
-              
-              
-              
-              
-                      <li>
-                        <a href="/2020/10/07/技术/工厂模式/">
-                          <span style="color:#0bf;">
-                          07日14:00:00</span>
-                          工厂模式
-                        </a>
-                      </li>
-                      
-              
-              
-              
-              
-              
-                      <li>
-                        <a href="/2020/10/06/技术/单例模式/">
-                          <span style="color:#0bf;">
-                          06日22:28:00</span>
-                          单例模式
-                        </a>
-                      </li>
-                      
-                    </ul>
-                  </li>
-                </ul>
-              
-              
+  </div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <p><strong>基本介绍</strong></p>
+<ol>
+<li>适配器模式(AdapterPattern)将某个类的接口转换成客户端期望的另一个接口表示，主的目的是兼容性，让原本 因接口不匹配不能一起工作的两个类可以协同工作。其别名为包装器(Wrapper)<br>尚硅谷 Java 设计模式<br>第 9 章 适配器设计模式 9.1 现实生活中的适配器例子</li>
+<li>适配器模式属于结构型模式</li>
+<li>主要分为三类:类适配器模式、对象适配器模式、接口适配器模式</li>
+</ol>
+<h1 id="1-类适配器模式"><a href="#1-类适配器模式" class="headerlink" title="1.类适配器模式"></a>1.类适配器模式</h1><p> <strong>应用实例说明</strong></p>
+<ol>
+<li>以生活中充电器的例子来讲解适配器，充电器本身相当于 Adapter，220V 交流电相当于 src (即被适配者)，我们 的目 dst(即 目标)是 5V 直流电</li>
+</ol>
+<p><strong>UML</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201008232827.png" alt="image"></p>
+<p><strong>CODE</strong></p>
+<pre><code class="Java">public class Voltage220V {
+    public int output220V() {
+        int src = 220;
+        System.out.println(&quot;电压=&quot; + src + &quot;V&quot;);
+        return src;
+    }
+}
+</code></pre>
+<pre><code class="Java">public interface IVoltage5V {
+    public int output5V();
+}
+</code></pre>
+<pre><code class="Java">public class VoltageAdapter extends Voltage220V implements IVoltage5V{
+    @Override
+    public int output5V() {
+        int srcV = output220V();
+        int dstV = srcV / 44;
+        return dstV;
+    }
+}
+</code></pre>
+<pre><code class="Java">public class Client {
+    public static void main(String[] args) {
+        System.out.println(&quot;类适配器模式&quot;);
+        VoltageAdapter voltageAdapter = new VoltageAdapter();
+        System.out.println(&quot;转换后电压&quot; + voltageAdapter.output5V());
+    }
+}
+</code></pre>
+<p><strong>优缺点</strong></p>
+<ol>
+<li>Java 是单继承机制，所以类适配器需要继承 src 类这一点算是一个缺点, 因为这要求 dst 必须是接口，有一定局 限性;</li>
+<li>src 类的方法在 Adapter 中都会暴露出来，也增加了使用的成本。</li>
+<li>由于其继承了src类，所以它可以根据需求重写src类的方法，使得Adapter的灵活性增强了。</li>
+</ol>
+<h1 id="2-对象适配器模式"><a href="#2-对象适配器模式" class="headerlink" title="2.对象适配器模式"></a>2.对象适配器模式</h1><p><strong>介绍</strong></p>
+<ol>
+<li>根据“合成复用原则”，在系统中尽量使用关联关系(聚合)来替代继承关系。</li>
+</ol>
+<p><strong>UML</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201008232853.png" alt="image"></p>
+<p><strong>CODE</strong></p>
+<pre><code class="Java">public interface IVoltage5V {
+    public int output5V();
+}
+</code></pre>
+<pre><code class="Java">public class Voltage220V {
+    public int output220V() {
+        int src = 220;
+        System.out.println(&quot;电压=&quot; + src + &quot;V&quot;);
+        return src;
+    }
+}
+</code></pre>
+<pre><code class="Java">public class VoltageAdapter  implements IVoltage5V {
+    private Voltage220V voltage220V;
+
+    public VoltageAdapter(Voltage220V voltage220V) {
+        this.voltage220V = voltage220V;
+    }
+
+    @Override
+    public int output5V() {
+        int srcV = voltage220V.output220V();
+        int dstV = srcV / 44;
+        return dstV;
+    }
+}
+</code></pre>
+<pre><code class="Java">public class Client {
+    public static void main(String[] args) {
+        System.out.println(&quot;类适配器模式&quot;);
+        VoltageAdapter voltageAdapter = new VoltageAdapter(new Voltage220V());
+        System.out.println(&quot;转换后电压&quot; + voltageAdapter.output5V() + &quot;V&quot;);
+    }
+}
+</code></pre>
+<p><strong>优缺点</strong></p>
+<ol>
+<li>对象适配器和类适配器其实算是同一种思想，只不过实现方式不同。 根据合成复用原则，使用组合替代继承， 所以它解决了类适配器必须继承 src 的局限性问题，也不再要求 dst 必须是接口。</li>
+</ol>
+<h1 id="3-接口适配器模式"><a href="#3-接口适配器模式" class="headerlink" title="3.接口适配器模式"></a>3.接口适配器模式</h1><p><strong>介绍</strong></p>
+<ol>
+<li>一些书籍称为:适配器模式(DefaultAdapterPattern)或缺省适配器模式。</li>
+<li>核心思路:当不需要全部实现接口提供的方法时，可先设计一个抽象类实现接口，并为该接口中每个方法提供<br>一个默认实现(空方法)，那么该抽象类的子类可有选择地覆盖父类的某些方法来实现需求</li>
+<li>适用于一个接口不想使用其所有的方法的情况。</li>
+</ol>
+<p><strong>UML</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201008232904.png" alt="image"></p>
+<p><strong>CODE</strong></p>
+<pre><code class="Java">public interface Interface4 {
+    public void m1();
+    public void m2();
+    public void m3();
+    public void m4();
+}
+</code></pre>
+<pre><code class="Java">public abstract class AbsAdapter implements Interface4{
+    //默认实现
+    @Override
+    public void m1() {
+
+    }
+
+    @Override
+    public void m2() {
+
+    }
+
+    @Override
+    public void m3() {
+
+    }
+
+    @Override
+    public void m4() {
+
+    }
+}
+</code></pre>
+<pre><code class="Java">public class Client {
+    public static void main(String[] args) {
+        AbsAdapter absAdapter = new AbsAdapter() {
+            //只需要去覆盖我们 需要使用 接口方法
+            @Override
+            public void m1() {
+                System.out.println(&quot;m1 method&quot;);
+            }
+        };
+        absAdapter.m1();
+    }
+}
+</code></pre>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+              </ul>
             </div>
           </div>
         </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
       </article>
-    </div>
-  </div>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+        
+          
+            <div class="post-nepre full next">
+          
+            <a href="/2020/10/08/技术/建造者模式/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                建造者模式</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4asHXF3SLvCKEfXTHBmYKjpi-MdYXbMMI",
+        appKey: "xXS4NNFP7X7Su7AIwt86pHXj",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/#" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico" itemprop="image" alt="Yukino" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/#" itemprop="url" rel="author">Yukino</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
+
+
 
     </div> 
     <!--站内搜索模块-->   
