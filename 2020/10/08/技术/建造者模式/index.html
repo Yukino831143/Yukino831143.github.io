@@ -464,18 +464,19 @@
           <p><strong>基本介绍</strong></p>
 <ol>
 <li>建造者模式(BuilderPattern)又叫生成器模式，是一种对象构建模式。它可以将复杂对象的建造过程抽象出 来(抽象类别)，使这个抽象过程的不同实现方法可以构造出不同表现(属性)的对象。</li>
-<li><p><strong>建造者模式的四个角色</strong></p>
-</li>
-<li><p>Product(产品角色): 一个具体的产品对象。</p>
-</li>
+</ol>
+<p><strong>建造者模式的四个角色</strong></p>
+<ol>
+<li>Product(产品角色): 一个具体的产品对象。</li>
 <li>Builder(抽象建造者): 创建一个 Product 对象的各个部件指定的 接口/抽象类。</li>
 <li>ConcreteBuilder(具体建造者): 实现接口，构建和装配各个部件。</li>
 <li>Director(指挥者): 构建一个使用 Builder 接口的对象。它主要是用于创建一个复杂的对象。它主要有两个作<br>用，一是:隔离了客户与对象的生产过程，二是:负责控制产品对象的生产过程。</li>
 </ol>
 <p><strong>建造者模式解决盖房需求</strong></p>
 <ol>
-<li>需要建房子:这一过程为打桩、砌墙、封顶。不管是普通房子也好，别墅也好都需要经历这些过程，下面我们 使用建造者模式(Builder Pattern)来完成<br><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/Snipaste_2020-10-08_11-47-58.jpg" alt="image"></li>
+<li>需要建房子:这一过程为打桩、砌墙、封顶。不管是普通房子也好，别墅也好都需要经历这些过程，下面我们 使用建造者模式(Builder Pattern)来完成</li>
 </ol>
+<p><strong>UML</strong><br><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/Snipaste_2020-10-08_11-47-58.jpg" alt="image"></p>
 <p><strong>CODE</strong></p>
 <pre><code class="Java">public abstract class HouseBuilder {
     protected House house = new House();
