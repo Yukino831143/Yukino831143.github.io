@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2020-10-08T15:31:39.776Z</updated>
+  <updated>2020-10-13T16:27:24.935Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>桥接模式</title>
+    <link href="/2020/10/14/%E6%8A%80%E6%9C%AF/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"/>
+    <id>/2020/10/14/技术/桥接模式/</id>
+    <published>2020-10-13T16:30:00.000Z</published>
+    <updated>2020-10-13T16:27:24.935Z</updated>
+    
+    <summary type="html">
+    
+      桥接模式
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="设计模式" scheme="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>适配器模式</title>
