@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2020-10-13T16:27:24.935Z</updated>
+  <updated>2020-10-19T18:13:58.614Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,126 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Daily Review</title>
+    <link href="/2020/10/20/%E7%94%9F%E6%B4%BB/Daily%20Review/"/>
+    <id>/2020/10/20/生活/Daily Review/</id>
+    <published>2020-10-19T18:10:00.000Z</published>
+    <updated>2020-10-19T18:13:58.614Z</updated>
+    
+    <summary type="html">
+    
+      Daily Review
+    
+    </summary>
+    
+      <category term="生活" scheme="/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="Daily Review" scheme="/tags/Daily-Review/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>拦截器-Interceptor</title>
+    <link href="/2020/10/20/%E6%8A%80%E6%9C%AF/%E6%8B%A6%E6%88%AA%E5%99%A8-Interceptor/"/>
+    <id>/2020/10/20/技术/拦截器-Interceptor/</id>
+    <published>2020-10-19T17:50:00.000Z</published>
+    <updated>2020-10-19T17:53:15.861Z</updated>
+    
+    <summary type="html">
+    
+      拦截器-Interceptor
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Spring MVC" scheme="/tags/Spring-MVC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Restful风格</title>
+    <link href="/2020/10/19/%E6%8A%80%E6%9C%AF/Restful/"/>
+    <id>/2020/10/19/技术/Restful/</id>
+    <published>2020-10-19T13:00:00.000Z</published>
+    <updated>2020-10-19T17:51:28.500Z</updated>
+    
+    <summary type="html">
+    
+      Restful风格
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Spring MVC" scheme="/tags/Spring-MVC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring MVC</title>
+    <link href="/2020/10/18/%E6%8A%80%E6%9C%AF/Spring%20MVC/"/>
+    <id>/2020/10/18/技术/Spring MVC/</id>
+    <published>2020-10-18T13:00:00.000Z</published>
+    <updated>2020-10-19T17:49:49.689Z</updated>
+    
+    <summary type="html">
+    
+      Spring MVC
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Spring MVC" scheme="/tags/Spring-MVC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring 事务管理</title>
+    <link href="/2020/10/18/%E6%8A%80%E6%9C%AF/Spring%20%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86/"/>
+    <id>/2020/10/18/技术/Spring 事务管理/</id>
+    <published>2020-10-18T07:00:00.000Z</published>
+    <updated>2020-10-18T07:46:40.308Z</updated>
+    
+    <summary type="html">
+    
+      Spring 事务管理
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="spring" scheme="/tags/spring/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JDBC Template</title>
+    <link href="/2020/10/17/%E6%8A%80%E6%9C%AF/JDBC%20Template/"/>
+    <id>/2020/10/17/技术/JDBC Template/</id>
+    <published>2020-10-17T06:00:00.000Z</published>
+    <updated>2020-10-18T07:37:07.724Z</updated>
+    
+    <summary type="html">
+    
+      JDBC Template
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="spring" scheme="/tags/spring/"/>
+    
+  </entry>
   
   <entry>
     <title>桥接模式</title>

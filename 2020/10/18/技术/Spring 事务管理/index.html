@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     
     <title itemprop="name">
-      桥接模式 | yukino
+      Spring 事务管理 | yukino
     </title>
     <!-- yukino:这里是网页标签的小图标 -->
     
@@ -435,7 +435,7 @@
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      桥接模式</h1>
+      Spring 事务管理</h1>
       <p class="entry-census">
         <span>
           <a href="/#">
@@ -447,7 +447,7 @@
         </span>
         <span class="bull">
         ·</span>
-        2020-10-14<span class="bull">
+        2020-10-18<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -461,136 +461,598 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <p><strong>基本介绍</strong></p>
-<ol>
-<li>桥接模式(Bridge模式)是指:将实现与抽象放在两个不同的类层次中，使两个层次可以独立改变。</li>
-<li>是一种结构型设计模式</li>
-<li>Bridge 模式基于类的最小设计原则，通过使用封装、聚合及继承等行为让不同的类承担不同的职责。它的主要特点是把抽象(Abstraction)与行为实现(Implementation)分离开来，从而可以保持各部分的独立性以及应对他们的 功能扩展</li>
-</ol>
-<p><strong>UML</strong></p>
-<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201014002445.png" alt="image"></p>
-<p><strong>CODE</strong></p>
-<pre><code class="Java">public interface Brand {
-    void open();
-    void close();
+          <p><strong>什么是事务？</strong></p>
+<p>事务一般指的是数据库事务(Database Transaction),是指一个程序执行单元，要么完全执行，要么完全不执行</p>
+<p><strong>事务并发问题</strong></p>
+<ul>
+<li>脏读</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201018152637.png" alt="image"></p>
+<p>解决方法：只能读取永久数据，不能读取内存中的数据 </p>
+<ul>
+<li>不可重复读</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201018152727.png" alt="image"></p>
+<p>解决方法：锁行 </p>
+<ul>
+<li>幻读</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201018154446.png" alt="image"></p>
+<p>解决方法：锁表</p>
+<p><strong>Mysql事务隔离级别</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201018152949.png" alt="image"></p>
+<p><strong>JDBC事务隔离级别</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201018153050.png" alt="image"></p>
+<p><strong>事务传播行为</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/blogImageHosting/20201018153209.png" alt="image"></p>
+<h1 id="0-公共代码"><a href="#0-公共代码" class="headerlink" title="0. 公共代码"></a>0. 公共代码</h1><pre><code class="XML">&lt;!--spring-dao.xml--&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd&quot;&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/os?useUnicode=true&amp;amp;characterEncoding=utf-8&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;foreverlove&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!--在 XML 配置文件中启动 Spring 的自动扫描功能
+    我们就不再需要在 XML 中显式使用 &lt;bean/&gt; 进行Bean 的配置。
+    Spring 在容器初始化时将自动扫描 com.imooc.os.dao 指定的包及其子包下的所有 class文件，
+    所有标注了 @Repository 的类都将被注册为 Spring Bean。
+    --&gt;
+    &lt;context:component-scan base-package=&quot;com.imooc.os.dao&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">@Repository
+public class OrderDaoImpl implements OrderDao {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    public void insert(Order order) {
+        String sql = &quot;insert into orders values(?,?,?,?,?,?,?,?,?,?,?)&quot;;
+        jdbcTemplate.update(sql,order.getId(),order.getProductsId(),order.getNumber(),order.getPrice(),order.getCreateTime(),order.getSendTime(),order.getConfirmTime(),order.getConsignee(),order.getConsigneePhone(),order.getConsigneeAddress(),order.getStatus());
+    }
+
+    public void update(Order order) {
+        String sql = &quot;update orders set create_time=?,send_time=?,confirm_time=?,consignee=?,consignee_phone=?,consignee_address=?,status=? where id=?&quot;;
+        jdbcTemplate.update(sql,order.getProductsId(),order.getNumber(),order.getPrice(),order.getCreateTime(),order.getSendTime(),order.getConfirmTime(),order.getConsignee(),order.getConsigneePhone(),order.getConsigneeAddress(),order.getStatus(),order.getId());
+    }
+
+    public void delete(String id) {
+        String sql = &quot;delete from orders where id=?&quot;;
+        jdbcTemplate.update(sql,id);
+    }
+
+    public Order select(String id) {
+        String sql = &quot;select form orders where id=?&quot;;
+        return jdbcTemplate.queryForObject(sql,new OrderRowMapper(),id);
+    }
+
+    public List&lt;Order&gt; select() {
+        String sql = &quot;select form orders&quot;;
+        return jdbcTemplate.query(sql,new OrderRowMapper());
+    }
+
+    private class OrderRowMapper implements RowMapper&lt;Order&gt;{
+        public Order mapRow(ResultSet resultSet, int i) throws SQLException {
+            Order order=new Order();
+            order.setId(resultSet.getString(&quot;id&quot;));
+            order.setProductsId(resultSet.getString(&quot;product_id&quot;));
+            order.setNumber(resultSet.getInt(&quot;number&quot;));
+            order.setPrice(resultSet.getDouble(&quot;price&quot;));
+            order.setCreateTime(resultSet.getTimestamp(&quot;create_time&quot;));
+            order.setSendTime(resultSet.getTimestamp(&quot;send_time&quot;));
+            order.setConfirmTime(resultSet.getTimestamp(&quot;confirm_time&quot;));
+            order.setConsignee(resultSet.getString(&quot;consignee&quot;));
+            order.setConsigneePhone(resultSet.getString(&quot;consignee_phone&quot;));
+            order.setConsigneeAddress(resultSet.getString(&quot;consignee_address&quot;));
+            order.setStatus(resultSet.getString(&quot;status&quot;));
+            return order;
+        }
+    }
 }
 </code></pre>
-<pre><code class="Java">public class Vivo implements Brand {
-    @Override
-    public void open() {
-        System.out.println(&quot;VIVO手机开机&quot;);
+<pre><code class="Java">@Repository
+public class ProductDaoImpl implements ProductDao {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    public void insert(Product product) {
+        String sql = &quot;insert into products values(?,?,?,?,?)&quot;;
+        jdbcTemplate.update(sql,product.getId(),product.getTitle(),product.getPrice(),product.getStock(),product.getStatus());
     }
 
-    @Override
-    public void close() {
-        System.out.println(&quot;VIVO手机关机&quot;);
-    }
-}
-</code></pre>
-<pre><code class="Java">public class Xiaomi implements Brand {
-    @Override
-    public void open() {
-        System.out.println(&quot;Xiaomi手机开机&quot;);
+    public void update(Product product) {
+        String sql = &quot;update products set title=?,price=?,stock=?,status=? where id=?&quot;;
+        jdbcTemplate.update(sql,product.getTitle(),product.getPrice(),product.getStock(),product.getStatus(),product.getId());
     }
 
-    @Override
-    public void close() {
-        System.out.println(&quot;Xiaomi手机关机&quot;);
+    public void delete(String id) {
+        String sql = &quot;delete form products where id=?&quot;;
+        jdbcTemplate.update(sql,id);
     }
 
-}
-</code></pre>
-<pre><code class="Java">public abstract class Phone {
-    private Brand brand;
-
-    public Phone(Brand brand) {
-        this.brand = brand;
-    }
-    protected void open() {
-        brand.open();
-    }
-    protected void close() {
-        brand.close();
-    }
-}
-</code></pre>
-<pre><code class="Java">public class FoldedPhone extends Phone {
-    public FoldedPhone(Brand brand) {
-        super(brand);
+    public Product select(String id) {
+        String sql = &quot;select * from products where id=?&quot;;
+        return jdbcTemplate.queryForObject(sql,new ProductRowMapper(),id);
     }
 
-    public void open() {
-        super.open();
-        System.out.println(&quot;折叠样式手机&quot;);
-    }
-    public void close() {
-        super.close();
-        System.out.println(&quot;折叠样式手机&quot;);
+    public List&lt;Product&gt; select() {
+        String sql = &quot;select * from products&quot;;
+        return jdbcTemplate.query(sql,new ProductRowMapper());
     }
 
-}
-</code></pre>
-<pre><code class="Java">public class UpRightPhone extends Phone {
+    private class ProductRowMapper implements RowMapper&lt;Product&gt;{
 
-    //构造器
-    public UpRightPhone(Brand brand) {
-        super(brand);
-    }
-
-    public void open() {
-        super.open();
-        System.out.println(&quot; 直立样式手机 &quot;);
-    }
-
-    public void close() {
-        super.close();
-        System.out.println(&quot; 直立样式手机 &quot;);
+        public Product mapRow(ResultSet resultSet, int i) throws SQLException {
+            Product product = new Product();
+            product.setId(resultSet.getString(&quot;id&quot;));
+            product.setTitle(resultSet.getString(&quot;title&quot;));
+            product.setPrice(resultSet.getDouble(&quot;price&quot;));
+            product.setStock(resultSet.getInt(&quot;stock&quot;));
+            product.setStatus(resultSet.getString(&quot;status&quot;));
+            return product;
+        }
     }
 }
 </code></pre>
-<pre><code class="Java">public class Client {
+<h1 id="1-Spring编程式事物处理"><a href="#1-Spring编程式事物处理" class="headerlink" title="1.Spring编程式事物处理"></a>1.Spring编程式事物处理</h1><h2 id="1-1-方式1-基于底层API的编程式事物处理"><a href="#1-1-方式1-基于底层API的编程式事物处理" class="headerlink" title="1.1 方式1 基于底层API的编程式事物处理"></a>1.1 方式1 基于底层API的编程式事物处理</h2><ul>
+<li>PlatformTransactionManager</li>
+<li>TransactionDefinition</li>
+<li>TransactionStatus</li>
+</ul>
+<pre><code class="XML">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;import resource=&quot;spring-dao.xml&quot;/&gt;
+    &lt;context:component-scan base-package=&quot;com.imooc.os.service.impl1&quot;/&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;transactionDefinition&quot; class=&quot;org.springframework.transaction.support.DefaultTransactionDefinition&quot;&gt;
+        &lt;property name=&quot;propagationBehaviorName&quot; value=&quot;PROPAGATION_REQUIRED&quot;/&gt;
+        &lt;!--PROPAGATION_REQUIRED 表示 事务传播行为--支持当前事务，如果没有当前事务，就新建一个事务--&gt;
+        &lt;!--也可配置隔离级别等其他属性，不配置即使用默认--&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">package com.imooc.os.service;
 
-    public static void main(String[] args) {
+import com.imooc.os.entity.Order;
 
-        //获取折叠式手机 (样式 + 品牌 )
+public interface OrderService {
+    void addOrder(Order order);
+}
+</code></pre>
+<pre><code class="Java">/*1.基于底层API的方式 PlatformTransactionManager TransactionDefinition*/
+@Service
+public class OrderServiceImpl implements OrderService {
 
-        Phone phone1 = new FoldedPhone(new Xiaomi());
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+    @Autowired
+    private TransactionDefinition transactionDefinition;
 
-        phone1.open();
-        phone1.close();
+    public void addOrder(Order order) {
+        order.setCreateTime(new Date());
+        order.setStatus(&quot;待付款&quot;);
+        //开启事务
+        TransactionProxyFactoryBean transactionProxyFactoryBean;
+        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+        try {
+            orderDao.insert(order);
+            Product product = productDao.select(order.getProductsId());
+            product.setStock(product.getStock() - order.getNumber());
+            productDao.update(product);
+            //结束事务
+            transactionManager.commit(transactionStatus);
+        }catch (Exception e){
+            e.printStackTrace();
+            //出问题，将未提交的sql回滚
+            transactionManager.rollback(transactionStatus);
+        }
+    }
+}
+</code></pre>
+<pre><code class="Java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;classpath:spring-service1.xml&quot;)
+//1.基于底层api的编程式事务处理方式
+public class OrderTest {
 
-        System.out.println(&quot;=======================&quot;);
+    @Autowired
+    private OrderService orderService;
 
-        Phone phone2 = new FoldedPhone(new Vivo());
+    @Test
+    public void testAddOrder(){
+        Order order = new Order(&quot;100013&quot;,&quot;100002&quot;,2,1799,&quot;&quot;,&quot;&quot;,&quot;&quot;);
+        orderService.addOrder(order);
+    }
 
-        phone2.open();
-        phone2.close();
 
-        System.out.println(&quot;==============&quot;);
+}
+</code></pre>
+<h2 id="1-2-基于TransactionTemplate的编程式事务管理"><a href="#1-2-基于TransactionTemplate的编程式事务管理" class="headerlink" title="1.2 基于TransactionTemplate的编程式事务管理"></a>1.2 基于TransactionTemplate的编程式事务管理</h2><ul>
+<li>TransactionTemplate</li>
+</ul>
+<pre><code class="Xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;import resource=&quot;spring-dao.xml&quot;/&gt;
+    &lt;context:component-scan base-package=&quot;com.imooc.os.service.impl2&quot;/&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;transactionTemplate&quot; class=&quot;org.springframework.transaction.support.TransactionTemplate&quot;&gt;
+        &lt;property name=&quot;transactionManager&quot; ref=&quot;transactionManager&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">//2.基于TransactionTemplate的编程式事务管理
+@Service
+public class OrderServiceImpl implements OrderService {
 
-        UpRightPhone phone3 = new UpRightPhone(new Xiaomi());
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private ProductDao productDao;
 
-        phone3.open();
-        phone3.close();
+    //2.TransactionTemplate 用于简化底层API
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
-        System.out.println(&quot;==============&quot;);
+    public void addOrder(final Order order) {
+        order.setCreateTime(new Date());
+        order.setStatus(&quot;待付款&quot;);
 
-        UpRightPhone phone4 = new UpRightPhone(new Vivo());
+        transactionTemplate.execute(new TransactionCallback() {
+            public Object doInTransaction(TransactionStatus transactionStatus) {
+                try {
+                    orderDao.insert(order);
+                    Product product = productDao.select(order.getProductsId());
+                    product.setStock(product.getStock() - order.getNumber());
+                    productDao.update(product);
+                    //不需要提交，TransactionTemplate会帮你提交
+                }catch (Exception e){
+                    e.printStackTrace();
+                    transactionStatus.setRollbackOnly();//回滚
+                }
+                return null;
+            }
+        });
 
-        phone4.open();
-        phone4.close();
+    }
+}
+</code></pre>
+<pre><code class="Java">public interface OrderService {
+    void addOrder(Order order);
+}
+</code></pre>
+<pre><code class="Java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;classpath:spring-service2.xml&quot;)
+//2.基于TransactionTemplate的编程式事务管理
+public class OrderTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Test
+    public void testAddOrder(){
+        Order order = new Order(&quot;100013&quot;,&quot;100002&quot;,2,1799,&quot;&quot;,&quot;&quot;,&quot;&quot;);
+        orderService.addOrder(order);
     }
 
 }
 </code></pre>
-<p><strong>优缺点</strong></p>
-<ol>
-<li>实现了<strong>抽象和实现部分</strong>的分离，从而极大的提供了系统的灵活性，让抽象部分和实现部分独立开来，这有助于 系统进行分层设计，从而产生更好的结构化系统。</li>
-<li>对于系统的高层部分，只需要知道抽象部分和实现部分的接口就可以了，其它的部分由具体业务来完成。</li>
-<li>桥接模式<strong>替代多层继承</strong>方案，可以减少子类的个数，降低系统的管理和维护成本。</li>
-<li>桥接模式的引入增加了系统的理解和设计难度，由于聚合关联关系建立在抽象层，要求开发者针对抽象进行设<br>计和编程</li>
-<li>桥接模式要求正确识别出系统中两个独立变化的维度(抽象、和实现)，因此其使用范围有一定的局限性，即需<br>要有这样的应用场景。 桥接模式其它应用场景<br>对于那些不希望使用继承或因为多层次继承导致系统类的个数急剧增加的系统，桥接模式尤为适用.</li>
-</ol>
+<h1 id="2-Spring声明式事务处理"><a href="#2-Spring声明式事务处理" class="headerlink" title="2.Spring声明式事务处理"></a>2.Spring声明式事务处理</h1><p><strong>简介</strong></p>
+<ul>
+<li>Spring的声明式事务处理是建立在AOP的基础之上的。其本质是对方法前后进行拦截，然后在目标方法开始之前创建或加一个事务，在执行完目标方法之后根据执行情况提交或者回滚事务。</li>
+<li>建议在开发中使用声明式事务，使得业务代码纯粹干净，方便后期代码维护</li>
+</ul>
+<p><strong>分类</strong></p>
+<ul>
+<li>基于TransactionInterceptor的声明式事务处理。</li>
+<li>基于TransactionProxyFactoryBean的声明式事务处理。</li>
+<li>基于<tx> 命名空间的声明式事物管理。</tx></li>
+<li>基于 @Transactional的声明式事务管理。</li>
+</ul>
+<h2 id="2-1-基于TransactionInterceptor的声明式事务处理。"><a href="#2-1-基于TransactionInterceptor的声明式事务处理。" class="headerlink" title="2.1 基于TransactionInterceptor的声明式事务处理。"></a>2.1 基于TransactionInterceptor的声明式事务处理。</h2><pre><code class="Xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;import resource=&quot;spring-dao.xml&quot;/&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--1.基于TransactionInterceptor的声明式事务处理--&gt;
+    &lt;bean id=&quot;orderServiceTarget&quot; class=&quot;com.imooc.os.service.impl.OrderServiceImpl&quot;/&gt;
+    &lt;bean id=&quot;transactionInterceptor&quot; class=&quot;org.springframework.transaction.interceptor.TransactionInterceptor&quot;&gt;
+        &lt;!--配置事务管理器--&gt;
+        &lt;property name=&quot;transactionManager&quot; ref=&quot;transactionManager&quot;/&gt;
+        &lt;!--配置拦截器--&gt;
+        &lt;property name=&quot;transactionAttributes&quot;&gt;
+            &lt;props&gt;
+                &lt;!--key是方法，配置事务传播行为，属性--&gt;
+                &lt;prop key=&quot;get*&quot;&gt;PROPAGATION_REQUIRED,readOnly&lt;/prop&gt;
+                &lt;prop key=&quot;find*&quot;&gt;PROPAGATION_REQUIRED,readOnly&lt;/prop&gt;
+                &lt;prop key=&quot;search*&quot;&gt;PROPAGATION_REQUIRED,readOnly&lt;/prop&gt;
+                &lt;prop key=&quot;*&quot;&gt;PROPAGATION_REQUIRED&lt;/prop&gt;
+            &lt;/props&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+    &lt;!--用拦截器增强目标类，建立关联--&gt;
+    &lt;bean id=&quot;orderService&quot; class=&quot;org.springframework.aop.framework.ProxyFactoryBean&quot;&gt;
+        &lt;property name=&quot;target&quot; ref=&quot;orderServiceTarget&quot;/&gt;
+        &lt;property name=&quot;interceptorNames&quot;&gt;
+            &lt;list&gt;
+                &lt;idref bean=&quot;transactionInterceptor&quot;/&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private ProductDao productDao;
+
+    public void addOrder(Order order) {
+        order.setCreateTime(new Date());
+        order.setStatus(&quot;待付款&quot;);
+
+        orderDao.insert(order);
+        Product product = productDao.select(order.getProductsId());
+        product.setStock(product.getStock() - order.getNumber());
+        productDao.update(product);
+
+    }
+}
+</code></pre>
+<p>对于addOrder，由于拦截器增强，出错时，这个函数的操作自动回滚。</p>
+<pre><code class="Java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;classpath:spring-service3.xml&quot;)
+//3.基于TransactionInterceptor的声明式事务处理
+public class OrderTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Test
+    public void testAddOrder(){
+        Order order = new Order(&quot;100013&quot;,&quot;100002&quot;,2,1799,&quot;&quot;,&quot;&quot;,&quot;&quot;);
+        orderService.addOrder(order);
+    }
+}
+</code></pre>
+<h2 id="2-2-基于TransactionProxyFactoryBean的声明式事务处理"><a href="#2-2-基于TransactionProxyFactoryBean的声明式事务处理" class="headerlink" title="2.2 基于TransactionProxyFactoryBean的声明式事务处理"></a>2.2 基于TransactionProxyFactoryBean的声明式事务处理</h2><pre><code class="Xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;import resource=&quot;spring-dao.xml&quot;/&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!--2.基于TransactionProxyFactoryBean的声明式事务处理，其实就是简化上面的那种拦截器--&gt;
+    &lt;bean id=&quot;orderServiceTarget&quot; class=&quot;com.imooc.os.service.impl.OrderServiceImpl&quot;/&gt;
+    &lt;bean id=&quot;orderService&quot; class=&quot;org.springframework.transaction.interceptor.TransactionProxyFactoryBean&quot;&gt;
+        &lt;property name=&quot;transactionManager&quot; ref=&quot;transactionManager&quot;/&gt;
+        &lt;property name=&quot;transactionAttributes&quot;&gt;
+            &lt;props&gt;
+                &lt;prop key=&quot;get*&quot;&gt;PROPAGATION_REQUIRED,readOnly&lt;/prop&gt;
+                &lt;prop key=&quot;find*&quot;&gt;PROPAGATION_REQUIRED,readOnly&lt;/prop&gt;
+                &lt;prop key=&quot;search*&quot;&gt;PROPAGATION_REQUIRED,readOnly&lt;/prop&gt;
+                &lt;prop key=&quot;*&quot;&gt;PROPAGATION_REQUIRED&lt;/prop&gt;
+            &lt;/props&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;target&quot; ref=&quot;orderServiceTarget&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private ProductDao productDao;
+
+    public void addOrder(Order order) {
+        order.setCreateTime(new Date());
+        order.setStatus(&quot;待付款&quot;);
+
+        orderDao.insert(order);
+        Product product = productDao.select(order.getProductsId());
+        product.setStock(product.getStock() - order.getNumber());
+        productDao.update(product);
+
+    }
+}
+</code></pre>
+<pre><code class="Java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;classpath:spring-service4.xml&quot;)
+//4.基于TransactionProxyFactoryBean的声明式事务处理，其实就是简化上面的那种拦截器
+public class OrderTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Test
+    public void testAddOrder(){
+        Order order = new Order(&quot;100013&quot;,&quot;100002&quot;,2,1799,&quot;&quot;,&quot;&quot;,&quot;&quot;);
+        orderService.addOrder(order);
+    }
+}
+</code></pre>
+<h2 id="2-3-最推荐-基于-命名空间的声明式事物管理。"><a href="#2-3-最推荐-基于-命名空间的声明式事物管理。" class="headerlink" title="2.3 (最推荐)基于 命名空间的声明式事物管理。"></a>2.3 (最推荐)基于<tx> 命名空间的声明式事物管理。</tx></h2><pre><code class="Xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd&quot;&gt;
+    &lt;import resource=&quot;spring-dao.xml&quot;/&gt;
+    &lt;context:component-scan base-package=&quot;com.imooc.os.service.impl&quot;/&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!--3.基于&lt;tx&gt;命名空间的声明式事务处理，这种是实际开发常用的--&gt;
+    &lt;!--增加通知--&gt;
+    &lt;tx:advice id=&quot;txAdvice&quot; transaction-manager=&quot;transactionManager&quot;&gt;
+        &lt;tx:attributes&gt;
+            &lt;tx:method name=&quot;get*&quot; propagation=&quot;REQUIRED&quot; read-only=&quot;true&quot;/&gt;
+            &lt;tx:method name=&quot;find*&quot; propagation=&quot;REQUIRED&quot; read-only=&quot;true&quot;/&gt;
+            &lt;tx:method name=&quot;search*&quot; propagation=&quot;REQUIRED&quot; read-only=&quot;true&quot;/&gt;
+            &lt;tx:method name=&quot;*&quot; propagation=&quot;REQUIRED&quot;/&gt;
+        &lt;/tx:attributes&gt;
+    &lt;/tx:advice&gt;
+    &lt;!--增强的地方,在哪个方法增强--&gt;
+    &lt;aop:config&gt;
+        &lt;aop:pointcut id=&quot;pointcut&quot; expression=&quot;execution(* com.imooc.os.service.impl.*.*(..))&quot;/&gt;
+        &lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut-ref=&quot;pointcut&quot;/&gt;
+    &lt;/aop:config&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private ProductDao productDao;
+
+    public void addOrder(Order order) {
+        order.setCreateTime(new Date());
+        order.setStatus(&quot;待付款&quot;);
+
+        orderDao.insert(order);
+        Product product = productDao.select(order.getProductsId());
+        product.setStock(product.getStock() - order.getNumber());
+        productDao.update(product);
+
+    }
+}
+</code></pre>
+<pre><code class="Java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;classpath:spring-service5.xml&quot;)
+//5.基于&lt;tx&gt;命名空间的声明式事务处理，这种是实际开发常用的
+public class OrderTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Test
+    public void testAddOrder(){
+        Order order = new Order(&quot;100013&quot;,&quot;100002&quot;,2,1799,&quot;&quot;,&quot;&quot;,&quot;&quot;);
+        orderService.addOrder(order);
+    }
+}
+</code></pre>
+<h2 id="2-4-基于-Transactional的声明式事务管理。"><a href="#2-4-基于-Transactional的声明式事务管理。" class="headerlink" title="2.4 基于 @Transactional的声明式事务管理。"></a>2.4 基于 @Transactional的声明式事务管理。</h2><pre><code class="Xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd&quot;&gt;
+    &lt;import resource=&quot;spring-dao.xml&quot;/&gt;
+    &lt;context:component-scan base-package=&quot;com.imooc.os.service.impl6&quot;/&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!--4.基于@Transactional的声明式事务管理--&gt;
+    &lt;tx:annotation-driven transaction-manager=&quot;transactionManager&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<pre><code class="Java">@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private ProductDao productDao;
+
+    //4.基于@Transactional的声明式事务管理
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void addOrder(Order order) {
+        order.setCreateTime(new Date());
+        order.setStatus(&quot;待付款&quot;);
+
+        orderDao.insert(order);
+        Product product = productDao.select(order.getProductsId());
+        product.setStock(product.getStock() - order.getNumber());
+        productDao.update(product);
+
+    }
+}
+</code></pre>
+<pre><code class="Java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;classpath:spring-service6.xml&quot;)
+//6.基于@Transactional的声明式事务管理,这种是实际开发常用的
+
+public class OrderTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Test
+    public void testAddOrder(){
+        Order order = new Order(&quot;100013&quot;,&quot;100002&quot;,2,1799,&quot;&quot;,&quot;&quot;,&quot;&quot;);
+        orderService.addOrder(order);
+    }
+}
+</code></pre>
 
         </div>
         <!-- .entry-content -->
@@ -622,7 +1084,7 @@
           
             <div class="post-nepre half previous">
           
-            <a href="/2020/10/17/技术/JDBC Template/" rel="prev">
+            <a href="/2020/10/18/技术/Spring MVC/" rel="prev">
               <div class="background">
                 <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
               </div>
@@ -630,7 +1092,7 @@
               Previous Post</span>
               <div class="info">
                 <h3>
-                JDBC Template</h3>
+                Spring MVC</h3>
                 <hr>
               </div>
             </a>
@@ -640,7 +1102,7 @@
           
             <div class="post-nepre half next">
           
-            <a href="/2020/10/08/技术/适配器模式/" rel="next">
+            <a href="/2020/10/17/技术/JDBC Template/" rel="next">
               <div class="background">
                 <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
               </div>
@@ -648,7 +1110,7 @@
               Next Post</span>
               <div class="info">
                 <h3>
-                适配器模式</h3>
+                JDBC Template</h3>
                 <hr>
               </div>
             </a>
