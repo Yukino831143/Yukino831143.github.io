@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     
     <title itemprop="name">
-      Tag: docker | yukino
+      Java语法 | yukino
     </title>
     <!-- yukino:这里是网页标签的小图标 -->
     
@@ -424,65 +424,251 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="docker.img" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <!--文章详情页的banner从使用封面图片，修改为自定义，使用md文章中的属性 banner 20200712-->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg);" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      Java语法</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/#">
+            <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico">
+          </a>
+        </span>
+        <span>
+          <a href="/#">Yukino</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2021-1-17<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">docker</h1>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-      
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2021/01/17/技术/Docker/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="1-stream-使用"><a href="#1-stream-使用" class="headerlink" title="1. stream() 使用"></a>1. stream() 使用</h1><ol>
+<li>stream().map</li>
+</ol>
+<pre><code class="Java">List&lt;Integer&gt; list = Arrays.asList(1,2,3,4);
+List&lt;Integer&gt; list2 = list.stream().map(l1 -&gt; l1 * 2).collect(Collectors.toList());
+</code></pre>
+<pre><code class="java">List&lt;String&gt; list3 = Arrays.asList(&quot;a&quot;,&quot;b&quot;,&quot;cc&quot;,&quot;dd&quot;);
+List&lt;String&gt; list4 = list3.stream().map(String::toUpperCase).collect(Collectors.toList());
+</code></pre>
+<pre><code class="java">List&lt;String&gt; list3 = Arrays.asList(&quot;a&quot;,&quot;b&quot;,&quot;cc&quot;,&quot;dd&quot;);
+//映射规则可以是一个函数
+List&lt;String&gt; list4 = list3.stream().map(l1 -&gt; {return l1.toUpperCase();}).collect(Collectors.toList());
+</code></pre>
+<p>stream().map 表示将数组、列表等的元素按照一定规则进行映射</p>
+<p><code>collect(Collectors.toList());</code>表示将映射结果转换成列表</p>
+<p><code>collect(Collectors.toSet());</code>表述转换成集合，可以达到去重目的</p>
+<ol start="2">
+<li>stream().filter</li>
+</ol>
+<pre><code class="java">List&lt;Integer&gt; list = Arrays.asList(1,2,3,4);
+List&lt;Integer&gt; list1 = list.stream().filter(l1 -&gt; l1.intValue() &gt; 3).collect(Collectors.toList());
+</code></pre>
+<p>stream().filter 表示将数组、列表等的元素按照一定规则进行筛选,保留的是满足上面条件的</p>
+<ol start="3">
+<li>Collectors.toMap</li>
+</ol>
+<p>实现list 转 map</p>
+<pre><code class="java">@Data
+@AllArgsConstructor
+class User {
+    private Integer id;
+    private String name;
+}
+</code></pre>
+<pre><code class="java">List&lt;User&gt; list5 = Arrays.asList(
+  new User(1, &quot;yukino&quot;),
+  new User(2, &quot;mashiro&quot;),
+  new User(3, &quot;yui&quot;)
+);
+Map&lt;Integer, String&gt; collect = list5.stream().collect(Collectors.toMap(User::getId, User::getName));
+</code></pre>
+<ol start="4">
+<li>Collectors.joining</li>
+</ol>
+<p>实现字符串拼接</p>
+<pre><code class="java">String[] name = {&quot;yukino*&quot;, &quot;mash?iro&quot;, &quot;yu+i&quot;};
+Stream&lt;String&gt; stringStream = Stream.of(name);
+
+String collect = stringStream
+  .map(t -&gt; t.replace(&quot;*&quot;, &quot;&quot;).replace(&quot;+&quot;, &quot;&quot;).replace(&quot;?&quot;, &quot;&quot;))
+  .collect(Collectors.joining(&quot;,&quot;, &quot;[&quot;, &quot;]&quot;));
+System.out.println(collect);
+</code></pre>
+<p><code>[yukino,mashiro,yui]</code></p>
+<ol start="5">
+<li>stream().flatMap</li>
+</ol>
+<p><strong>作用</strong></p>
+<p>列表中的元素含有列表成员，取出元素，再将元素成员列表的元素取出来，进行合并</p>
+<pre><code class="java">@Data
+@AllArgsConstructor
+class TagDTO {
+    private String categoryName;
+    private List&lt;String&gt; tags;
+}
+
+public static void main(String[] args) {
+  TagDTO tagDTO1 = new TagDTO(&quot;开发语言&quot;, Arrays.asList(&quot;Java&quot;, &quot;Python&quot;, &quot;C&quot;));
+  TagDTO tagDTO2 = new TagDTO(&quot;开发工具&quot;, Arrays.asList(&quot;IDEA&quot;, &quot;Tomcat&quot;));
+  List&lt;TagDTO&gt; tagDTOS = Arrays.asList(tagDTO1, tagDTO2);
+  List&lt;String&gt; collect = tagDTOS.stream().flatMap(tag -&gt; tag.getTags().stream()).collect(Collectors.toList());
+  System.out.println(collect);
+}
+</code></pre>
+<p><code>[Java, Python, C, IDEA, Tomcat]</code></p>
+<h1 id="2-Map-foreach的使用"><a href="#2-Map-foreach的使用" class="headerlink" title="2. Map foreach的使用"></a>2. Map foreach的使用</h1><pre><code class="java">Map&lt;String, String&gt; infoMap = new HashMap&lt;&gt;();
+        infoMap.put(&quot;name&quot;,&quot;yukino&quot;);
+        infoMap.put(&quot;site&quot;,&quot;www.yukino.tech&quot;);
+        infoMap.put(&quot;email&quot;, &quot;xxxx&quot;);
+        infoMap.forEach((key,value) -&gt; {
+            System.out.println(key + &quot;:&quot; + value);
+        });
+</code></pre>
+<h1 id="3-PriorityQueue"><a href="#3-PriorityQueue" class="headerlink" title="3. PriorityQueue"></a>3. PriorityQueue</h1><p>PriorityQueue，即优先队列，由小顶堆组成</p>
+<pre><code class="java">@Data
+@AllArgsConstructor
+class HotTagDTO implements Comparable {
+    private String name;
+    private Integer priority;
+
+      //此方法是元素比较大小的依据
+    @Override
+    public int compareTo(Object o) {
+        return this.getPriority() - ((HotTagDTO) o).getPriority();
+    }
+}
+</code></pre>
+<pre><code class="java">    public static void main(String[] args) {
+        PriorityQueue&lt;HotTagDTO&gt; priorityQueue = new PriorityQueue&lt;&gt;(10);
+        priorityQueue.add(new HotTagDTO(&quot;yukino&quot;, 1));
+        priorityQueue.add(new HotTagDTO(&quot;mashiro&quot;,2));
+        System.out.println(priorityQueue.peek().getName());
+    }
+</code></pre>
+<ol>
+<li><code>add(E e)</code>和<code>offer(E e)</code>的语义相同，都是向优先队列中插入元素，只是<code>Queue</code>接口规定二者对插入失败时的处理不同，前者在插入失败时抛出异常，后则则会返回<code>false</code>。</li>
+<li><code>element()</code>和<code>peek()</code>的语义完全相同，都是获取但不删除队首元素，也就是队列中权值最小的那个元素，二者唯一的区别是当方法失败时前者抛出异常，后者返回<code>null</code>。根据小顶堆的性质，堆顶那个元素就是全局最小的那个</li>
+<li><code>remove()</code>和<code>poll()</code>方法的语义也完全相同，都是获取并删除队首元素，区别是当方法失败时前者抛出异常，后者返回<code>null</code>。</li>
+<li><code>remove(Object o)</code>方法用于删除队列中跟<code>o</code>相等的某一个元素（如果有多个相等，只删除一个）</li>
+</ol>
+
         </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/13.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2021/01/17/技术/Docker/">
-    Docker</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2021-1-17</div>
-    <p>
-    Docker</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2021/01/17/技术/Docker/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2021/01/18/技术/码问社区源码解析 - 1/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                码问社区源码解析(1)</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2021/01/17/技术/Docker/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                Docker</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4asHXF3SLvCKEfXTHBmYKjpi-MdYXbMMI",
+        appKey: "xXS4NNFP7X7Su7AIwt86pHXj",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
 
-
-      <div class="clearer">
-      </div>
-    </main>
-    <!--  -->
-    
-  </div>
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/#" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico" itemprop="image" alt="Yukino" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/#" itemprop="url" rel="author">Yukino</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
+
+
+
     </div> 
     <!--站内搜索模块-->   
     <div class="ins-search">
