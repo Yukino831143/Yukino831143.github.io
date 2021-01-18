@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2021-01-17T16:51:20.071Z</updated>
+  <updated>2021-01-18T17:29:18.754Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ubuntu搭建FTP服务器</title>
+    <link href="/2021/01/19/%E6%8A%80%E6%9C%AF/FTP%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    <id>/2021/01/19/技术/FTP服务器/</id>
+    <published>2021-01-18T17:20:00.000Z</published>
+    <updated>2021-01-18T17:29:18.754Z</updated>
+    
+    <summary type="html">
+    
+      ubuntu搭建FTP服务器
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="FTP" scheme="/tags/FTP/"/>
+    
+  </entry>
   
   <entry>
     <title>码问社区知识点拆解(2)</title>
