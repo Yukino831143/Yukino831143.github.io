@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2021-07-04T16:50:36.801Z</updated>
+  <updated>2021-07-04T16:52:19.343Z</updated>
   <id>/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>单例模式</title>
+    <title>Java8新特性</title>
     <link href="/2021/07/05/%E6%8A%80%E6%9C%AF/Java8%E6%96%B0%E7%89%B9%E6%80%A7/"/>
     <id>/2021/07/05/技术/Java8新特性/</id>
     <published>2021-07-04T16:50:00.000Z</published>
-    <updated>2021-07-04T16:50:36.801Z</updated>
+    <updated>2021-07-04T16:52:19.343Z</updated>
     
     <summary type="html">
     
