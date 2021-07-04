@@ -1,0 +1,1659 @@
+<!-- yukino:_partial/head.ejs主要完成一些页面初始化工作，但是在页面上基本表现不出来 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    
+    <title itemprop="name">
+      单例模式 | yukino
+    </title>
+    <!-- yukino:这里是网页标签的小图标 -->
+    
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/css/lib.min.css" media="all">
+    <link rel="stylesheet" href="/css/font.css" media="all">
+    <link rel="stylesheet" href="/css/insight.css" media="all">
+    <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+    <link rel="stylesheet" href="/css/zoom.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+    <!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+    <script>
+      /*Initial Variables*/
+      var mashiro_option = new Object();
+      var mashiro_global = new Object();
+      mashiro_option.NProgressON = true;
+      /*
+       * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+       * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+       */
+      mashiro_option.email_domain = "";
+      mashiro_option.email_name = "";
+      mashiro_option.cookie_version_control = "";
+      mashiro_option.qzone_autocomplete = false;
+      mashiro_option.site_name = "Yukino";
+      mashiro_option.author_name = "";
+      mashiro_option.site_url = "/";
+      mashiro_option.v_appId = "4asHXF3SLvCKEfXTHBmYKjpi-MdYXbMMI";
+      mashiro_option.v_appKey = "xXS4NNFP7X7Su7AIwt86pHXj";
+      mashiro_option.mathjax = "0";
+      mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/";
+      mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+      // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+      // mashiro_option.float_player_on = true;
+
+      /*End of Initial Variables*/
+    </script>
+    <script type="text/javascript">
+      var bg = "https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/1.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/2.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/3.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/4.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/5.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/6.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/7.webp,https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/cover/8.webp".split(",");
+      var bgindex = Math.floor(Math.random() * bg.length);
+      if (!!window.ActiveXObject || "ActiveXObject" in window) {
+        //is IE?
+        alert("朋友，IE浏览器未适配哦~");
+      }
+    </script>
+    <style type="text/css">
+      .hljs-ln {
+        border-collapse: collapse;
+      }
+      .hljs-ln td {
+        padding: 0;
+      }
+      .hljs-ln-n:before {
+        content: attr(data-line-number);
+      }
+    </style>
+    <style type="text/css">
+      .site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+    </style>
+  </head>
+</html>
+
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <!--yukino:显示多种社交联系方式,视频播放器,首页下滑箭头-->
+    <div class="headertop filter-dot">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="/">
+          <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico" />
+        </a>
+      </div>
+      <div class="header-info">
+        <p>やはり俺の青春ラブコメはまちがっている</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img
+              class="flipx"
+              src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/other/next-b.svg"
+            />
+          </li>
+          <!--yukino:显示多种社交联系方式-->
+            
+          <li>
+            <a
+              href="/#"
+              target="_blank"
+              class="social-github"
+              title="github"
+            >
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/github.png" />
+            </a>
+          </li>
+            
+          <li>
+            <a
+              href="/#"
+              target="_blank"
+              class="social-github"
+              title="jianshu"
+            >
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/jianshu.png" />
+            </a>
+          </li>
+            
+          <li>
+            <a
+              href="/#"
+              target="_blank"
+              class="social-github"
+              title="sina"
+            >
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/sina.png" />
+            </a>
+          </li>
+            
+          <li>
+            <a
+              href="/#"
+              target="_blank"
+              class="social-github"
+              title="wangyiyun"
+            >
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/wangyiyun.png" />
+            </a>
+          </li>
+            
+          <li>
+            <a
+              href="/#"
+              target="_blank"
+              class="social-github"
+              title="zhihu"
+            >
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/zhihu.png" />
+            </a>
+          </li>
+            
+          <li>
+            <a
+              href="/#"
+              target="_blank"
+              class="social-github"
+              title="email"
+            >
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/email.svg" />
+            </a>
+          </li>
+            
+          <li class="wechat">
+            <a href="/#">
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/social/wechat.png" />
+            </a>
+            <div class="wechatInner">
+              <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/social/wechat.png" />
+            </div>
+          </li>
+            
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/other/next-b.svg" />
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <!--yukino:播放器-->
+  <div id="video-container" style="">
+    <video
+      style="object-fit: fill;"
+      id="bgvideo"
+      class="video"
+      video-name=""
+      src=""
+      width="auto"
+      preload="auto"
+    ></video>
+    <div id="video-btn" class="loadvideo videolive"></div>
+    <div id="video-add"></div>
+    <div class="video-stu"></div>
+  </div>
+  <!--下滑箭头，点击箭头，页面从主页壁纸滑向博客页面-->
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true"> </i>
+    </span>
+  </div>
+</div>
+
+    <div id="page" class="site wrapper">
+      <!--yukino:头部的menu部分，首页，归档，清单，友人帐...-->
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">Yukino</span>
+            <span class="shironeko"></span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search"> </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1"></div>
+      <div class="line line2"></div>
+      <div class="line line3"></div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <!--yukino:头部的menu部分，首页，归档，清单，友人帐...-->
+          <ul id="menu-new" class="menu">
+            
+            <li>
+              <a href="/">
+                <span class="faa-parent animated-hover">
+                  <i
+                    class="fa fa-fort-awesome faa-shake"
+                    aria-hidden="true"
+                  ></i>
+                  首页
+                </span>
+              </a>
+              
+            </li>
+            
+            <li>
+              <a href="/archives">
+                <span class="faa-parent animated-hover">
+                  <i
+                    class="fa fa-archive faa-shake"
+                    aria-hidden="true"
+                  ></i>
+                  归档
+                </span>
+              </a>
+              
+              <ul class="sub-menu">
+                
+                <li>
+                  <a
+                    href="/categories/技术/"
+                  >
+                    <i
+                      class="fa fa-code"
+                      aria-hidden="true"
+                    ></i>
+                    技术
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/categories/生活/"
+                  >
+                    <i
+                      class="fa fa-file-text-o"
+                      aria-hidden="true"
+                    ></i>
+                    生活
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/categories/随想/"
+                  >
+                    <i
+                      class="fa fa-commenting-o"
+                      aria-hidden="true"
+                    ></i>
+                    随想
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/categories/番剧/"
+                  >
+                    <i
+                      class="fa fa-film faa-vertical"
+                      aria-hidden="true"
+                    ></i>
+                    番剧
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/categories/读书/"
+                  >
+                    <i
+                      class="fa fa-th-list faa-bounce"
+                      aria-hidden="true"
+                    ></i>
+                    读书
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/music/"
+                  >
+                    <i
+                      class="fa fa-headphones"
+                      aria-hidden="true"
+                    ></i>
+                    歌单
+                  </a>
+                </li>
+                
+              </ul>
+              
+            </li>
+            
+            <li>
+              <a href="/comment/">
+                <span class="faa-parent animated-hover">
+                  <i
+                    class="fa fa-pencil-square-o faa-tada"
+                    aria-hidden="true"
+                  ></i>
+                  留言板
+                </span>
+              </a>
+              
+            </li>
+            
+            <li>
+              <a href="/donate/">
+                <span class="faa-parent animated-hover">
+                  <i
+                    class="fa fa-heart faa-pulse"
+                    aria-hidden="true"
+                  ></i>
+                  赞赏
+                </span>
+              </a>
+              
+            </li>
+            
+            <li>
+              <a href="/">
+                <span class="faa-parent animated-hover">
+                  <i
+                    class="fa fa-leaf faa-wrench"
+                    aria-hidden="true"
+                  ></i>
+                  关于
+                </span>
+              </a>
+              
+              <ul class="sub-menu">
+                
+                <li>
+                  <a
+                    href="/about/"
+                  >
+                    <i
+                      class="fa fa-meetup"
+                      aria-hidden="true"
+                    ></i>
+                    我？
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/theme-sakura/"
+                  >
+                    <i
+                      class="fa iconfont icon-sakura"
+                      aria-hidden="true"
+                    ></i>
+                    主题
+                  </a>
+                </li>
+                
+                <li>
+                  <a
+                    href="/lab/"
+                  >
+                    <i
+                      class="fa fa-cogs"
+                      aria-hidden="true"
+                    ></i>
+                    Lab
+                  </a>
+                </li>
+                
+              </ul>
+              
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <!--文章详情页的banner从使用封面图片，修改为自定义，使用md文章中的属性 banner 20200712-->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg);" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      单例模式</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/#">
+            <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico">
+          </a>
+        </span>
+        <span>
+          <a href="/#">Yukino</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2021-7-5<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="接口中默认方法修饰为普通方法"><a href="#接口中默认方法修饰为普通方法" class="headerlink" title="接口中默认方法修饰为普通方法"></a>接口中默认方法修饰为普通方法</h1><p>在<code>jdk8</code>之前，<code>interface</code>之中可以定义变量和方法，变量必须是<code>public、static、final</code>的，方法必须是<code>public、abstract</code>的，由于这些修饰符都是默认的。</p>
+<p>接口定义方法：<code>public</code> 抽象方法 需要子类实现</p>
+<p>接口定义变量：<code>public、static、final</code></p>
+<p>在<code>JDK 1.8</code>开始 支持使用<code>static</code>和<code>default</code>修饰 可以写方法体，不需要子类重写。</p>
+<p>方法：</p>
+<p>普通方法 可以有方法体</p>
+<p>抽象方法 没有方法体需要子类实现 重写。</p>
+<p><code>static</code>和<code>default</code>没有强制要求重写，<code>static</code> 无法重写，<code>default</code>可以重写</p>
+<pre><code class="Java">public interface JDK8Interface {
+    void addOrder();
+
+    /**
+     * 默认方法 可以写方法体
+     */
+    default void getDefaultOrder() {
+        System.out.println(&quot;我是默认方法 我可以写方法体&quot;);
+    }
+
+    static void getStaticOrder() {
+        System.out.println(&quot;我是静态的方法 可以写方法体&quot;);
+    }
+}
+
+
+class JDK8InterfaceImpl implements JDK8Interface {
+    /**
+     * 默认和静态方法不是我们的抽象方法 ，所以不需要重写
+     */
+    @Override
+    public void addOrder() {
+        System.out.println(&quot;addOrder&quot;);
+    }
+}
+</code></pre>
+<p><code>JDK8</code> ，接口内定义方法不必加<code>public</code>这是冗余的</p>
+<h1 id="Lambda表达式"><a href="#Lambda表达式" class="headerlink" title="Lambda表达式"></a>Lambda表达式</h1><h2 id="为什么要使用Lambda表达式"><a href="#为什么要使用Lambda表达式" class="headerlink" title="为什么要使用Lambda表达式"></a>为什么要使用Lambda表达式</h2><p>可以非常简洁的形式调用我们的匿名函数接口</p>
+<pre><code class="Java">public static void main(String[] args) {
+    // 1.使用new的实现类的形式调用接口
+    OrderService orderSerivce1 = new OrderSerivceImpl();
+    orderSerivce1.addOrder();
+    // 2.使用匿名内部接口调用
+    new OrderService() {
+        @Override
+        public void addOrder() {
+            System.out.println(&quot;使用匿名内部类的形式调用接口&quot;);
+        }
+    }.addOrder();
+    // 3.使用lambda调用接口
+    OrderService orderSerivce2=  ()-&gt; System.out.println(&quot;使用lambda调用接口&quot;);
+    orderSerivce2.addOrder();
+}
+</code></pre>
+<h2 id="Lambda表达式的规范"><a href="#Lambda表达式的规范" class="headerlink" title="Lambda表达式的规范"></a>Lambda表达式的规范</h2><p>使用<code>Lambda</code>表达式 依赖于函数接口</p>
+<ol>
+<li><p>在接口中只能够允许有一个抽象方法</p>
+</li>
+<li><p>在函数接口中定义<code>object</code>类中方法</p>
+</li>
+<li><p>使用默认或者静态方法</p>
+</li>
+<li><p><code>@FunctionalInterface</code> 表示该接口为函数接口</p>
+</li>
+</ol>
+<p><code>Java</code>中使用<code>Lambda</code>表达式的规范，必须是为函数接口</p>
+<p>函数接口的定义：在该接口中只能存在一个抽象方法，该接口称作为函数接口</p>
+<p><code>JDK</code>中自带的函数接口：</p>
+<pre><code class="Java">java.lang.Runnable
+
+java.util.concurrent.Callable
+
+java.security.PrivilegedAction
+
+java.util.Comparator
+
+java.io.FileFilter
+
+java.nio.file.PathMatcher
+
+java.lang.reflect.InvocationHandler
+
+java.beans.PropertyChangeListener
+
+java.awt.event.ActionListener
+
+javax.swing.event.ChangeListener
+</code></pre>
+<p>我们也可以使用<code>@FunctionalInterface</code>修饰为函数接口</p>
+<h3 id="函数接口定义"><a href="#函数接口定义" class="headerlink" title="函数接口定义"></a>函数接口定义</h3><ol>
+<li><p>在接口中只能有一个抽象方法</p>
+</li>
+<li><p><code>@FunctionalInterface</code>  标记为该接口为函数接口</p>
+</li>
+<li><p>可以通过<code>default</code>修饰为普通方法</p>
+</li>
+<li><p>可以定义<code>object</code>类中的方法</p>
+</li>
+</ol>
+<pre><code class="Java">@FunctionalInterface
+public interface MyFunctionalInterface {
+    void add();
+    default void get() {
+    }
+    String toString();//Object的方法
+}
+</code></pre>
+<h3 id="Java系统内置那些函数接口"><a href="#Java系统内置那些函数接口" class="headerlink" title="Java系统内置那些函数接口"></a>Java系统内置那些函数接口</h3><p>函数型接口</p>
+<pre><code class="Java">Function&lt;T ,R&gt;
+
+​    R apply(T t);
+
+UnaryOperator&lt;T&gt;
+
+​    T apply(T t);//参数与返回值类型一致
+
+BiFunction &lt;T ,U,R&gt;
+
+​    R apply(T t,U u);//两个参数，参数与返回值类型一致
+
+BinaryOperator&lt;T&gt;
+
+​    T apply(T t1,T t2);//两个相同类型参数，且同类型返回值
+
+ToIntFunction&lt;T&gt;//限定返回int
+
+ToLongFunction&lt;T&gt;//限定返回long
+
+ToDoubleFunction&lt;T&gt;//限定返回double
+
+IntFunction&lt;R&gt;//限定入参int,返回泛型R
+
+LongFunction&lt;R&gt;//限定入参long,返回泛型R
+
+DoubleFunction&lt;R&gt;//限定入参double,返回泛型R
+</code></pre>
+<p>断言型接口</p>
+<pre><code class="Java">Predicate&lt;T&gt;
+
+​    boolean test(T t);
+</code></pre>
+<h3 id="Lambda基础语法"><a href="#Lambda基础语法" class="headerlink" title="Lambda基础语法"></a>Lambda基础语法</h3><blockquote>
+<p>有参方法调用</p>
+</blockquote>
+<p><code>()</code> 参数列表</p>
+<p> <code>-&gt;</code> 分隔</p>
+<p><code>{}</code> 方法体</p>
+<p><code>(函数接口的参数列表 不需要写类型 需要定义参数名称)-&gt;{方法体}</code></p>
+<p><code>(a,b)-&gt;{}</code></p>
+<blockquote>
+<p>无参方法调用</p>
+</blockquote>
+<p><code>()-&gt;{}</code></p>
+<h4 id="无参方法调用"><a href="#无参方法调用" class="headerlink" title="无参方法调用"></a>无参方法调用</h4><pre><code class="Java">@FunctionalInterface
+public interface JDK8Interface {
+    void get();
+}
+</code></pre>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        JDK8Interface jdk8Interface = () -&gt; {
+            System.out.println(&quot;hello world&quot;);
+        };
+        jdk8Interface.get();
+    }
+}
+</code></pre>
+<h4 id="带参数和返回值"><a href="#带参数和返回值" class="headerlink" title="带参数和返回值"></a>带参数和返回值</h4><blockquote>
+<p>匿名函数</p>
+</blockquote>
+<pre><code class="Java">@FunctionalInterface
+public interface JDK8Interface {
+    int get(int a);
+}
+</code></pre>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        JDK8Interface jdk8Interface = new JDK8Interface() {
+            @Override
+            public int get(int a) {
+                return a;
+            }
+        };
+        System.out.println(jdk8Interface.get(1));
+    }
+}
+</code></pre>
+<blockquote>
+<p>lambda表达式</p>
+</blockquote>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        JDK8Interface jdk8Interface = (a)-&gt;{return a;};
+        System.out.println(jdk8Interface.get(1));
+    }
+}
+</code></pre>
+<blockquote>
+<p>精简语法</p>
+<ol>
+<li>如果方法体中只有一条语句的情况下可以不需要写<code>{}</code></li>
+<li>如果方法体只有一条<code>return</code>的情况下不需要些<code>{}</code> 和<code>return</code></li>
+<li>如果参数只有一个时可以不需要写<code>()</code></li>
+</ol>
+</blockquote>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        JDK8Interface jdk8Interface = a-&gt;a;
+        System.out.println(jdk8Interface.get(1));
+    }
+}
+</code></pre>
+<h3 id="函数引用"><a href="#函数引用" class="headerlink" title="函数引用"></a>函数引用</h3><p>如果在<code>lambda</code>表达式中需要处理的逻辑比较复杂，一般情况会单独的写一个方法。在<code>lambda</code>表达式中 直接引用这个方法即可。</p>
+<h4 id="静态方法引用"><a href="#静态方法引用" class="headerlink" title="静态方法引用"></a>静态方法引用</h4><blockquote>
+<p><strong>语法:</strong><br>类::静态方法</p>
+</blockquote>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+
+        //关键
+        IMessage getStaticMethod = Test::getStaticMethod;
+        getStaticMethod.get(1);
+    }
+    //静态方法
+    public static void getStaticMethod(Integer a) {
+        System.out.println(a);
+    }
+}
+@FunctionalInterface
+interface IMessage{
+    void get(Integer a);
+}
+</code></pre>
+<h4 id="非静态方法引用"><a href="#非静态方法引用" class="headerlink" title="非静态方法引用"></a>非静态方法引用</h4><blockquote>
+<p><strong>语法:</strong><br>对象::非静态方法</p>
+<p><strong>注意事项</strong>:</p>
+<p>引用的这个方法，参数(数量、类型)和返回值，必须要跟接口中定义的<strong>一致</strong>。</p>
+<p><code>public void getStaticMethod(Integer a)</code></p>
+<p><code>void get(Integer a);</code></p>
+</blockquote>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        //创建对象
+        Test test = new Test();
+        IMessage getStaticMethod = test::getStaticMethod;
+        getStaticMethod.get(1);
+    }
+      //成员方法，非静态
+    public void getStaticMethod(Integer a) {
+        System.out.println(a);
+    }
+}
+
+@FunctionalInterface
+interface IMessage{
+    void get(Integer a);
+}
+</code></pre>
+<h4 id="构造方法引用"><a href="#构造方法引用" class="headerlink" title="构造方法引用"></a>构造方法引用</h4><blockquote>
+<p><strong>使用场景：</strong><br>如果某一个函数式接口中定义的方法，仅仅是为了得到一个类的<strong>对象</strong>。此时我们就可以使用构造方法的引用，简化这个方法的实现。<br><strong>语法</strong><br>类名::new</p>
+<p><strong>注意事项</strong></p>
+<p>可以通过接口中的方法的<strong>参数</strong>，区分引用不同的构造方法。</p>
+</blockquote>
+<pre><code class="Java">class Student {
+    public int age;
+    public String name;
+
+    public Student() {
+        System.out.println(&quot;无参构造方法&quot;);
+    }
+
+    public Student(int age) {
+        this.age = age;
+        System.out.println(&quot;有参构造方法&quot;);
+    }
+
+    public Student(int age, String name) {
+        this.age = age;
+        this.name = name;
+        System.out.println(&quot;两参构造方法&quot;);
+    }
+    @Override
+    public String toString() {
+        return &quot;Student{&quot; +
+                &quot;age=&quot; + age +
+                &quot;, name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                &#39;}&#39;;
+    }
+}
+</code></pre>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+         GetUser1 getUser1 = Student::new;
+         GetUser2 getUser2 = Student::new;
+         GetUser3 getUser3 = Student::new;
+        System.out.println(getUser1.getUser());
+        System.out.println(getUser2.getUser(16));
+        System.out.println(getUser3.getUser(16, &quot;yukino&quot;));
+
+    }
+}
+
+@FunctionalInterface
+interface GetUser1{
+    Student getUser();
+}
+
+@FunctionalInterface
+interface GetUser2 {
+    Student getUser(int age);
+}
+
+@FunctionalInterface
+interface GetUser3 {
+    Student getUser(int age, String name);
+}
+</code></pre>
+<h4 id="对象方法的引用"><a href="#对象方法的引用" class="headerlink" title="对象方法的引用"></a>对象方法的引用</h4><p> <strong>抽象方法的第一个参数类型刚好是实例方法的类型，抽象方法剩余的参数恰好可以当做实例方法的参数。</strong>如果函数式接口的实现能由上面说的实例方法调用来实现的话，那么就可以使用对象方法引用</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>语法</th>
+<th>对应lambda表达式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对象方法引用</td>
+<td>Class::method</td>
+<td>(inst,args) -&gt; 类名.method(args)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+
+
+        /**
+         * 一个参数没有返回值 而且第一个参数必须是实例方法的类型
+         */
+        //lambda表达式的写法
+        Consumer&lt;Too&gt;  c1 = (Too too) -&gt; too.foo();
+        //方法引用
+        Consumer&lt;Too&gt;  c2 = Too::foo;
+
+        //lambda表达式的写法
+        Consumer&lt;Too2&gt;  c3 = (Too2 too2) -&gt; too2.foo();
+        //方法引用
+        Consumer&lt;Too2&gt; c4=Too2::foo;
+
+        c1.accept(new Too());
+        c2.accept(new Too());
+        c3.accept(new Too2());
+        c4.accept(new Too2());
+
+
+
+        /**
+         * 两个参数无返回值
+         */
+
+        //lambda表达式的写法
+        BiConsumer&lt;Too2, String&gt; c5 = (too2, str) -&gt; too2.fo(str);
+        //方法引用
+        BiConsumer&lt;Too2, String&gt; c6 = Too2::fo;
+        c5.accept(new Too2(),&quot;dada&quot;);
+        c6.accept(new Too2(),&quot;dada&quot;);
+
+
+        /**
+         * 两个参数有返回值的写法
+         */
+        //lambda表达式的写法
+        BiFunction&lt;Prod, String, Integer&gt; bf1 = (p, s) -&gt; p.fun(s);
+        //方法引用
+        BiFunction&lt;Prod, String, Integer&gt; bf2 = Prod::fun;
+
+        Integer dada = bf1.apply(new Prod(), &quot;dada&quot;);
+        System.out.println(dada);
+        Integer dada2 = bf2.apply(new Prod(), &quot;dada&quot;);
+        System.out.println(dada2);
+
+
+        /**
+         * 自定义函数式接口演示对象方法引用
+         */
+        Execute ex1 = (p,name,size) -&gt; p.run(name, size);
+        Execute ex2 = Prod::run;
+        ex1.run(new Prod(),&quot;DADA&quot;,&quot;19&quot;);
+        ex2.run(new Prod(),&quot;DADA&quot;,&quot;19&quot;);
+
+    }
+
+}
+
+interface Execute {
+    public void run(Prod p, String name, String size);
+}
+
+class Prod {
+    public void run(String name, String size) {
+        System.out.println(&quot;run 开始执行&quot;+&quot;name:&quot;+name+&quot;size:&quot;+size);
+    }
+    public Integer fun(String s) {
+        return s.length();
+    }
+
+}
+
+class Too {
+    public Integer fun(String s) {
+        return 1;
+    }
+
+    public void foo() {
+        System.out.println(&quot;invoke&quot;);
+    }
+}
+
+class Too2 {
+
+    public void foo() {
+        System.out.println(&quot;invoke&quot;);
+    }
+
+    public void fo(String str) {
+
+    }
+}
+</code></pre>
+<h3 id="Lambda实战案例"><a href="#Lambda实战案例" class="headerlink" title="Lambda实战案例"></a>Lambda实战案例</h3><h4 id="foreach"><a href="#foreach" class="headerlink" title="foreach"></a>foreach</h4><pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        List&lt;String&gt; strings = Arrays.asList(&quot;hello&quot;, &quot;world&quot;, &quot;yes&quot;);
+        strings.forEach(s -&gt; System.out.println(s));
+    }
+}
+</code></pre>
+<h4 id="Lambda集合排序"><a href="#Lambda集合排序" class="headerlink" title="Lambda集合排序"></a>Lambda集合排序</h4><pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        List&lt;Student&gt; students = Arrays.asList(
+                new Student(&quot;hanser&quot;, 27),
+                new Student(&quot;yukino&quot;, 25),
+                new Student(&quot;mashiro&quot;, 18)
+        );
+        students.sort((o1, o2) -&gt; o1.age - o2.age);
+        students.forEach(student -&gt; System.out.println(student));
+    }
+}
+
+class Student {
+    String name;
+    int age;
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;student{&quot; +
+                &quot;name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                &quot;, age=&quot; + age +
+                &#39;}&#39;;
+    }
+}
+</code></pre>
+<h4 id="线程调用"><a href="#线程调用" class="headerlink" title="线程调用"></a>线程调用</h4><pre><code class="Java">public class Test {
+    public static void main(String[] args) {
+        new Thread(() -&gt; System.out.println(Thread.currentThread().getName()), &quot;线程1&quot;).start();
+    }
+}
+</code></pre>
+<h1 id="Java8-Stream流"><a href="#Java8-Stream流" class="headerlink" title="Java8 Stream流"></a>Java8 Stream流</h1><h2 id="什么是stream流"><a href="#什么是stream流" class="headerlink" title="什么是stream流"></a>什么是stream流</h2><p>Stream 是JDK1.8 中处理集合的关键抽象概念，Lambda 和 Stream 是JDK1.8新增的函数式编程最有亮点的特性了，它可以指定你希望对集合进行的操作，可以执行非常复杂的查找、过滤和映射数据等操作。使用Stream API 对集合数据进行操作，就类似于使用SQL执行的数据库查询。这种风格将要处理的元素集合看作一种流， 流在管道中传输， 并且可以在管道的节点上进行处理， 比如筛选， 排序，聚合等。</p>
+<p><img src="/Users/yukino/Desktop/private/nutshell/myself/markdown/博客/余胜军/images/image-20210704210446518.png" alt="image-20210704210446518"></p>
+<h2 id="Stream创建方式"><a href="#Stream创建方式" class="headerlink" title="Stream创建方式"></a>Stream创建方式</h2><p><code>parallelStream</code>为并行流采用多线程执行</p>
+<p><code>Stream</code>采用单线程执行 </p>
+<p><code>parallelStream</code>效率比<code>Stream</code>要高。</p>
+<pre><code class="Java">ArrayList&lt;UserEntity&gt; userEntities = new ArrayList&lt;&gt;();
+userEntities.add(new UserEntity(&quot;mayikt&quot;, 20));
+userEntities.add(new UserEntity(&quot;meite&quot;, 28));
+userEntities.add(new UserEntity(&quot;zhangsan&quot;, 35));
+userEntities.add(new UserEntity(&quot;xiaowei&quot;, 16));
+userEntities.add(new UserEntity(&quot;xiaowei&quot;, 16));
+
+userEntities.stream();
+userEntities.parallelStream();
+</code></pre>
+<h2 id="Stream将list转换为Set"><a href="#Stream将list转换为Set" class="headerlink" title="Stream将list转换为Set"></a>Stream将list转换为Set</h2><pre><code class="Java">Stream&lt;UserEntity&gt; stream = userEntities.stream();
+//将我们的集合转为Set
+Set&lt;UserEntity&gt; collectSet = stream.collect(Collectors.toSet());
+System.out.println(collectSet);
+</code></pre>
+<h2 id="Stream将list转换为Map"><a href="#Stream将list转换为Map" class="headerlink" title="Stream将list转换为Map"></a>Stream将list转换为Map</h2><pre><code class="Java">Student student1 = new Student(16, &quot;xiao&quot;);
+Student student2 = new Student(17, &quot;ming&quot;);
+List&lt;Student&gt; students = Arrays.asList(student1, student2);
+Map&lt;String, Integer&gt; studentMap = students.stream().collect(Collectors.toMap((student -&gt; student.name),
+                                                                             student -&gt; student.age));
+studentMap.forEach((key,value) -&gt; {
+  System.out.println(key + &quot;,&quot; + value);
+});
+</code></pre>
+<pre><code class="Java">Collector&lt;T, ?, Map&lt;K,U&gt;&gt; toMap(Function&lt;? super T, ? extends K&gt; keyMapper,
+                                Function&lt;? super T, ? extends U&gt; valueMapper) {
+  return toMap(keyMapper, valueMapper, throwingMerger(), HashMap::new);
+}
+</code></pre>
+<p><code>toMap</code>可以看到，参数是两个函数式接口，<code>key &amp; value</code></p>
+<pre><code class="Java">@FunctionalInterface
+public interface Function&lt;T, R&gt; {
+
+    /**
+     * Applies this function to the given argument.
+     *
+     * @param t the function argument
+     * @return the function result
+     */
+    R apply(T t);
+}
+</code></pre>
+<p>对于<code>Function</code>函数式接口，<code>T</code>为形参，<code>R</code>为返回值</p>
+<p>作为<code>map</code>,理所当然需要 key &amp; value, 两个函数式接口的返回值即为key &amp; value</p>
+<h2 id="Stream-Reduce-求和"><a href="#Stream-Reduce-求和" class="headerlink" title="Stream Reduce 求和"></a>Stream Reduce 求和</h2><p><code>Optional&lt;T&gt; reduce(BinaryOperator&lt;T&gt; accumulator);</code></p>
+<p><code>Stream</code>中的数据通过累加器<code>accumulator</code>迭代计算，最终得到一个<code>Optional</code>对象</p>
+<p>函数式接口<code>BinaryOperator</code>，继承于<code>BiFunction</code>，<code>Bifunction</code>中有一个<code>apply</code>方法，接收两个参数，返回一个结果</p>
+<p><code>public interface BinaryOperator&lt;T&gt; extends BiFunction&lt;T,T,T&gt;</code></p>
+<pre><code class="Java">@FunctionalInterface
+public interface BiFunction&lt;T, U, R&gt; {
+
+    /**
+     * Applies this function to the given arguments.
+     *
+     * @param t the first function argument
+     * @param u the second function argument
+     * @return the function result
+     */
+    R apply(T t, U u);
+}
+</code></pre>
+<p><code>reduce(BinaryOperator&lt;T&gt; accumulator)</code>方法需要一个函数式接口参数，该函数式接口需要两个参数，返回一个结果(reduce中返回的结果会作为下次累加器计算的第一个参数)，也就是累加器</p>
+<pre><code class="Java">Stream&lt;Integer&gt; integerStream = Stream.of(1, 2, 3, 4, 5);
+integerStream.reduce((acc, item) -&gt; {
+  System.out.println(&quot;acc:&quot; + acc);
+  acc += item;
+  System.out.println(&quot;item: &quot; + item);
+  System.out.println(&quot;acc+ : &quot; + acc);
+  System.out.println(&quot;--------&quot;);
+  return acc;
+});
+</code></pre>
+<p>运行结果</p>
+<pre><code class="Java">acc:1
+item: 2
+acc+ : 3
+--------
+acc:3
+item: 3
+acc+ : 6
+--------
+acc:6
+item: 4
+acc+ : 10
+--------
+acc:10
+item: 5
+acc+ : 15
+--------
+
+</code></pre>
+<p>简写为</p>
+<pre><code class="Java">Stream&lt;Integer&gt; integerStream = Stream.of(1, 2, 3, 4, 5);
+Optional accResult = integerStream.reduce((acc, item) -&gt; {
+  return acc + item;
+});
+System.out.println(accResult.get());
+</code></pre>
+<p>计算对象属性</p>
+<pre><code class="Java">        Student student1 = new Student(6, &quot;xiao&quot;);
+        Student student2 = new Student(7, &quot;ming&quot;);
+        Student student3 = new Student(8, &quot;hei&quot;);
+        List&lt;Student&gt; students = Arrays.asList(student1, student2, student3);
+        Optional&lt;Student&gt; reduce = students.stream().reduce((user1, user2) -&gt; {
+            user1.age = user1.age + user2.age;
+            return user1;
+        });
+        System.out.println(reduce.get().age);
+    }
+</code></pre>
+<h2 id="Stream-Max和Min"><a href="#Stream-Max和Min" class="headerlink" title="Stream Max和Min"></a>Stream Max和Min</h2><pre><code class="Java">Student student1 = new Student(6, &quot;xiao&quot;);
+Student student2 = new Student(7, &quot;ming&quot;);
+Student student3 = new Student(8, &quot;hei&quot;);
+List&lt;Student&gt; students = Arrays.asList(student1, student2, student3);
+Stream&lt;Student&gt; stream1 = students.stream();
+Optional&lt;Student&gt; max = stream1.max(((o1, o2) -&gt; o1.age - o2.age));
+System.out.println(max.get());
+
+Stream&lt;Student&gt; stream2 = students.stream();
+Optional&lt;Student&gt; min = stream2.min((o1,o2) -&gt; o1.age - o2.age);
+        System.out.println(min.get());
+}
+</code></pre>
+<h2 id="StreamMatch-匹配"><a href="#StreamMatch-匹配" class="headerlink" title="StreamMatch 匹配"></a>StreamMatch 匹配</h2><p><code>anyMatch</code>表示，判断的条件里，任意一个元素成功，返回<code>true</code></p>
+<p><code>allMatch</code>表示，判断条件里的元素，所有的都是，返回<code>true</code></p>
+<p><code>noneMatch</code>跟<code>allMatch</code>相反，判断条件里的元素，所有的都不是，返回<code>true</code></p>
+<pre><code class="Java">Student student1 = new Student(6, &quot;xiao&quot;);
+Student student2 = new Student(7, &quot;ming&quot;);
+Student student3 = new Student(8, &quot;hei&quot;);
+List&lt;Student&gt; students = Arrays.asList(student1, student2, student3);
+boolean eq1 = students.stream().anyMatch(student -&gt; student.name.equals(&quot;xiao&quot;));
+boolean eq2 = students.stream().allMatch(student -&gt; student.age &gt; 5);
+boolean eq3 = students.stream().noneMatch(student -&gt; student.age &lt; 5);
+System.out.println(eq1);
+System.out.println(eq2);
+System.out.println(eq3);
+</code></pre>
+<h2 id="Stream-Foreach循环"><a href="#Stream-Foreach循环" class="headerlink" title="Stream Foreach循环"></a>Stream Foreach循环</h2><pre><code class="Java">Student student1 = new Student( &quot;xiao&quot;, 7);
+Student student2 = new Student( &quot;ming&quot;, 8);
+Student student3 = new Student( &quot;hei&quot;, 9);
+List&lt;Student&gt; students = Arrays.asList(student1, student2, student3);
+students.stream().forEach(student -&gt; System.out.println(student));
+</code></pre>
+<h2 id="stream-filter过滤器"><a href="#stream-filter过滤器" class="headerlink" title="stream filter过滤器"></a>stream filter过滤器</h2><pre><code class="Java">Student student1 = new Student(6, &quot;xiao&quot;);
+Student student2 = new Student(7, &quot;ming&quot;);
+Student student3 = new Student(8, &quot;hei&quot;);
+List&lt;Student&gt; students = Arrays.asList(student1, student2, student3);
+Stream&lt;Student&gt; stream = students.stream().filter((student -&gt; student.age &gt; 6));
+stream.forEach(student -&gt; System.out.println(student));
+</code></pre>
+<h2 id="Stream-sorted排序"><a href="#Stream-sorted排序" class="headerlink" title="Stream sorted排序"></a>Stream sorted排序</h2><pre><code class="Java">Student student1 = new Student(6, &quot;xiao&quot;);
+Student student2 = new Student(7, &quot;ming&quot;);
+Student student3 = new Student(8, &quot;hei&quot;);
+Student student4 = new Student(9, &quot;yu&quot;);
+List&lt;Student&gt; students = Arrays.asList(student1, student2, student3, student4);
+students.stream().sorted((o1, o2) -&gt; o1.age -o2.age).forEach(student -&gt; System.out.println(student));
+</code></pre>
+<h2 id="stream-limit-skip"><a href="#stream-limit-skip" class="headerlink" title="stream limit skip"></a>stream limit skip</h2><pre><code class="Java">Student student1 = new Student(6, &quot;xiao&quot;);
+Student student2 = new Student(7, &quot;ming&quot;);
+Student student3 = new Student(8, &quot;hei&quot;);
+Student student4 = new Student(9, &quot;yu&quot;);
+List&lt;Student&gt; students = Arrays.asList(student1, student2, student3, student4);
+//取前两条
+students.stream().limit(2).forEach(student -&gt; System.out.println(student));
+//跳过前两条取两条
+students.stream().skip(2).limit(2).forEach(student -&gt; System.out.println(student));
+</code></pre>
+<h2 id="串行和并行流"><a href="#串行和并行流" class="headerlink" title="串行和并行流"></a>串行和并行流</h2><pre><code class="Java">Instant start = Instant.now();
+long sum = 0;
+for (long i = 0; i &lt; 50000000000L; i++) {
+  sum += i;
+}
+System.out.println(sum);
+Instant end  = Instant.now();
+System.out.println(&quot;耗时：&quot; + Duration.between(start, end).toMillis());
+}
+</code></pre>
+<pre><code class="Java">Instant start  = Instant.now();
+//创建一个LongStream,即 Stream流
+//rangeClosed 需要传入开始节点和结束节点两个参数，返回的是一个有序的LongStream
+LongStream longStream = LongStream.rangeClosed(0, 50000000000L);
+OptionalLong reduce = longStream.parallel().reduce(((left, right) -&gt; left + right));
+System.out.println(reduce.getAsLong());
+Instant end = Instant.now();
+System.out.println(&quot;耗时：&quot; + Duration.between(start, end).toMillis());
+</code></pre>
+<h1 id="Java8-Optional"><a href="#Java8-Optional" class="headerlink" title="Java8 Optional"></a>Java8 Optional</h1><p><code>Optional</code>类是一个可以为null的容器对象。如果值存在则<code>isPresent()</code>方法会返回<code>true</code>，调用<code>get()</code>方法会返回该对象。</p>
+<p><code>Optional</code>是个容器：它可以保存类型<code>T</code>的值，或者仅仅保存<code>null</code>。<code>Optional</code>提供很多有用的方法，这样我们就不用显式进行空值检测。</p>
+<p><code>Optional</code>类的引入很好的解决空指针异常。</p>
+<h2 id="判断参数是否为空"><a href="#判断参数是否为空" class="headerlink" title="判断参数是否为空"></a>判断参数是否为空</h2><p><code>ofNullable</code> 可以传递一个空对象</p>
+<p><code>Of</code>不可以传递空对象</p>
+<pre><code class="Java">Integer a1 = null;
+Optional&lt;Integer&gt; a = Optional.ofNullable(a1);
+System.out.println(a.isPresent());
+</code></pre>
+<p><code>isPresent true</code> 不为空  <code>isPresent false</code> 为空。</p>
+<h2 id="参数为空可以设定默认值"><a href="#参数为空可以设定默认值" class="headerlink" title="参数为空可以设定默认值"></a>参数为空可以设定默认值</h2><pre><code class="Java">Integer a1 = null;
+Integer a = Optional.ofNullable(a1).orElse(10);
+System.out.println(a);//10
+</code></pre>
+<h2 id="参数实现过滤"><a href="#参数实现过滤" class="headerlink" title="参数实现过滤"></a>参数实现过滤</h2><pre><code class="Java">Integer a1 = 18;
+Optional&lt;Integer&gt; a = Optional.ofNullable(a1);
+boolean present = a.filter(a2 -&gt; a2 &gt; 17).isPresent();
+System.out.println(present);
+</code></pre>
+<h2 id="与Lambda表达式结合使用，优化代码"><a href="#与Lambda表达式结合使用，优化代码" class="headerlink" title="与Lambda表达式结合使用，优化代码"></a>与Lambda表达式结合使用，优化代码</h2><h3 id="方案1"><a href="#方案1" class="headerlink" title="方案1"></a>方案1</h3><pre><code class="Java">//优化前
+String name = &quot;yukino&quot;;
+if (name != null) {
+  System.out.println(name);
+}
+
+//优化后
+String name1 = &quot;yukino&quot;;
+Optional&lt;String&gt; name2 = Optional.ofNullable(name1);
+name2.ifPresent(s -&gt; System.out.println(s));
+name2.ifPresent(System.out::print);
+</code></pre>
+<h3 id="方案2"><a href="#方案2" class="headerlink" title="方案2"></a>方案2</h3><pre><code class="Java">public class Test {
+    private static Student student = null;
+    public static void main(String[] args) {
+    }
+    public static Student getStudent() {
+        //优化前
+        /*
+        if (student == null) {
+            return createStudent();
+        }
+        return student;
+        */
+        //优化后
+        return Optional.ofNullable(student).orElseGet(() -&gt; createStudent());
+    }
+    private static Student createStudent() {
+        return new Student(&quot;yukino&quot;, 16);
+    }
+}
+</code></pre>
+<pre><code class="Java">    /**
+     * Return the value if present, otherwise invoke {@code other} and return
+     * the result of that invocation.
+     *
+     * @param other a {@code Supplier} whose result is returned if no value
+     * is present
+     * @return the value if present otherwise the result of {@code other.get()}
+     * @throws NullPointerException if value is not present and {@code other} is
+     * null
+     */
+    public T orElseGet(Supplier&lt;? extends T&gt; other) {
+        return value != null ? value : other.get();
+    }
+</code></pre>
+<pre><code class="Java">@FunctionalInterface
+public interface Supplier&lt;T&gt; {
+
+    /**
+     * Gets a result.
+     *
+     * @return a result
+     */
+    T get();
+}
+</code></pre>
+<h3 id="方案3"><a href="#方案3" class="headerlink" title="方案3"></a>方案3</h3><pre><code class="Java">    public static String getStudentName() {
+        //优化前
+        /*
+        Student student = new Student(&quot;hanser&quot;, 26);
+        if (student != null) {
+            String name = student.name;
+            if (name != null) {
+                return name.toLowerCase();
+            }
+        }
+        return  null;
+        */
+
+         //优化后
+        return Optional.ofNullable(student)
+                .map(student -&gt; student.name)
+                .map(name -&gt; name.toLowerCase())
+                .orElse(null);
+    }
+</code></pre>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+        
+          
+            <div class="post-nepre full next">
+          
+            <a href="/2021/01/31/技术/YukinoCloud源码解析/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                网盘源码解析</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4asHXF3SLvCKEfXTHBmYKjpi-MdYXbMMI",
+        appKey: "xXS4NNFP7X7Su7AIwt86pHXj",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/#" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico" itemprop="image" alt="Yukino" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/#" itemprop="url" rel="author">Yukino</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div> 
+    <!--站内搜索模块-->   
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input
+        type="text"
+        class="ins-search-input"
+        placeholder="请输入关键词..."
+      />
+      <span class="ins-close ins-selectable"
+        ><i class="fa fa-times-circle"></i
+      ></span>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+<!--yukino:script中的变量是用于站内搜索-->
+<script>
+  //function后面的变量window是形参，最后window是传入的实际参数。
+  (function (window) {
+    var INSIGHT_CONFIG = {
+      TRANSLATION: {
+        //yukino:insight变量是来自zh-cn.yml,但是怎么获取的不清楚，为何是zh-cn.yml而非en.yml也不清楚
+        POSTS: '文章',
+        // PAGES: '页面',
+        CATEGORIES: '分类',
+        TAGS: '标签',
+      },
+      ROOT_URL: "/",
+      CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+  })(window);
+</script>
+
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 yukino<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy 2020</p>
+    </div>
+    <div class="footer-device">
+      <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;">Theme <a href="https://github.com/honjun/hexo-theme-sakura" target="_blank"
+            style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i
+            class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a
+            href="https://2heng.xin/" target="_blank"
+            style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>&<a
+            href="https://www.hojun.cn/" target="_blank"
+            style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Hojun</a>, Powered by Hexo,
+          Hosted by Coding Pages</a>
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<script src="/js/botui.js"></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+  /* <![CDATA[ */
+  if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    var Poi = { "pjax": "1", "movies": { "url": "https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/video", "name": "yukino_360p.mp4", "live": "close" }, "windowheight": "fixed", "codelamp": "close", "ajaxurl": "", "order": "asc", "formpostion": "bottom" };
+  } else {
+    var Poi = { "pjax": "1", "movies": { "url": "https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/video", "name": "yukino_360p.mp4", "live": "open" }, "windowheight": "auto", "codelamp": "close", "ajaxurl": "", "order": "asc", "formpostion": "bottom" };
+  }
+/* ]]> */
+
+</script>
+<script>
+  $(document).ready(function () {
+    if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+      if ($(".pattern-center").length > 0) { //有图的情况
+        tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+        });
+      } else {
+        tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+        });
+      }
+      var offsetTop = $('.toc').offset().top - 95;
+      window.onscroll = function () {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop >= offsetTop) {
+          $('.toc').addClass('toc-fixed');
+        } else {
+          $('.toc').removeClass('toc-fixed');
+        }
+      }
+    }
+  });
+</script>
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">Yukino</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="https://github.com/Yukino831143" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="http://weibo.com/mashirozx?is_all=1" class="fa fa-weibo" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=954655431&site=qq&menu=yes" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/categories/技术/">
+                  <i class="fa fa-code" aria-hidden="true"></i>
+                  技术
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/生活/">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                  生活
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/随想/">
+                  <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                  随想
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/番剧/">
+                  <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
+                  番剧
+                </a>
+              </li>
+            
+              <li>
+                <a href="/categories/读书/">
+                  <i class="fa fa-th-list faa-bounce" aria-hidden="true"></i>
+                  读书
+                </a>
+              </li>
+            
+              <li>
+                <a href="/music/">
+                  <i class="fa fa-headphones" aria-hidden="true"></i>
+                  歌单
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/comment/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
+            留言板
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/donate/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+            赞赏
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 hexo-sakura</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<meting-js
+
+    id="363423188"
+
+    server="netease"
+
+    type="playlist"
+
+    fixed="true"
+
+    autoplay="false"
+
+    loop="all"
+
+    order="random"
+
+    preload="auto"
+
+    volume="0.7"
+
+    mutex="true"
+
+</meting-js>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+</body>
+</html>
