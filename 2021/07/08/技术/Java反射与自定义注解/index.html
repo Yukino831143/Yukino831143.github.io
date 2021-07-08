@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     
     <title itemprop="name">
-      yukino
+      反射与自定义注解 | yukino
     </title>
     <!-- yukino:这里是网页标签的小图标 -->
     
@@ -424,497 +424,537 @@
   </div>
 </header>
 
-      <div class="blank" style="padding-top: 0px;"></div>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <!--文章详情页的banner从使用封面图片，修改为自定义，使用md文章中的属性 banner 20200712-->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg);" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/banner/1.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      反射与自定义注解</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/#">
+            <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico">
+          </a>
+        </span>
+        <span>
+          <a href="/#">Yukino</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2021-7-8<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
 <div id="content" class="site-content">
-  
-  <div class="notice" style="margin-top:60px">
-    <i class="iconfont icon-notification">
-    </i>
-    <div class="notice-content">我的青春恋爱物语果然有问题。完   正在更新中...</div>
-  </div>
-  
-  <div class="top-feature-row">
-  <h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;">
-  <i class="fa fa-anchor" aria-hidden="true">
-  </i>
-  START:DASH!!</h1>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="/theme-sakura/" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/dash/2.png">
-        </div>
-        <div class="info">
-          <h3>Sakura</h3>
-          <p>基于hexo</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="https://github.com/Yukino831143" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/dash/1.png">
-        </div>
-        <div class="info">
-          <h3>github</h3>
-          <p>博主的github</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="/" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/dash/3.png">
-        </div>
-        <div class="info">
-          <h3>ACG</h3>
-          <p>二次元</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-</div>
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-      <h1 class="main-title" style="font-family: 'Ubuntu', sans-serif;">
-      <i class="fa fa-envira" aria-hidden="true"></i>
-      Discovery</h1>
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h1><h2 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h2><ol>
+<li>Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。本质是JVM得到class对象之后，再通过class对象进行反编译，从而获取对象的各种信息。</li>
+<li><p>Java属于先编译再运行的语言，程序中对象的类型在编译期就确定下来了，而当程序在运行时可能需要动态加载某些类，这些类因为之前用不到，所以没有被加载到JVM。通过反射，可以在运行时动态地创建对象并调用其属性，不需要提前在编译期知道运行的对象是谁。</p>
+</li>
+<li><p>使用反射机制可以动态获取当前class的信息 比如方法的信息、注解信息、方法的参数、属性等；</p>
+</li>
+</ol>
+<h2 id="反射机制的优缺点"><a href="#反射机制的优缺点" class="headerlink" title="反射机制的优缺点"></a>反射机制的优缺点</h2><blockquote>
+<p>优点</p>
+</blockquote>
+<ol>
+<li>在运行时获得类的各种内容，进行反编译，对于Java这种先编译再运行的语言，能够让我们很方便的创建灵活的代码，这些代码可以在运行时装配，无需在组件之间进行源代码的链接，更加容易实现面向对象。</li>
+<li>第三方框架—创建对象 不是直接new 反射机制创建，目的是提供开发者能够更好封装框架实现扩展功能。</li>
+</ol>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ol>
+<li>反射会消耗一定的系统资源，因此如果不需要动态地创建一个对象，那么就不需要用</li>
+<li>反射调用方法时可以忽略权限检查，因此可能会破坏封装性而导致安全问题。</li>
+</ol>
+<h2 id="反射的用途"><a href="#反射的用途" class="headerlink" title="反射的用途"></a>反射的用途</h2><ol>
+<li><p>通过反射机制访问java对象的属性，方法，构造方法等</p>
+</li>
+<li><p><code>JDBC</code>加载驱动连接 <code>class.forname</code></p>
+<p><code>Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</code>// 动态加载mysql驱动</p>
+</li>
+<li><p><code>Spring</code>容器框架<code>IOC</code>实例化对象</p>
+<p><code>&lt;bean id=&quot;user&quot; class=&quot;com.yukino.UserEntity&quot; /&gt;</code> </p>
+</li>
+<li><p>自定义注解生效（反射+<code>Aop</code>）</p>
+</li>
+<li><p>第三方核心的框架<code>mybatis orm</code></p>
+</li>
+</ol>
+<h2 id="反射技术的使用"><a href="#反射技术的使用" class="headerlink" title="反射技术的使用"></a>反射技术的使用</h2><p><code>Class</code>类 代表类的实体，在运行的Java应用程序中表示类和接口</p>
+<p><code>Field</code>类 代表类的成员变量（成员变量也称为类的属性）</p>
+<p><code>Method</code>类 代表类的方法</p>
+<p><code>Constructor</code>类 代表类的构造方法</p>
+<p>1.<code>getField、getMethod、getCostructor</code>方法可以获得指定名字的域、方法和构造器。</p>
+<p>2.<code>getFields、getMethods、getCostructors</code>方法可以获得类提供的<strong>public域</strong>、方法和构造器数组，其中<strong>包括超类的共有成员</strong>。</p>
+<p>3.<code>getDeclatedFields、getDeclatedMethods、getDeclaredConstructors</code>方法可以获得类中声明的全部域、方法和构造器，其中包括<strong>私有和受保护</strong>的成员，但不包括超类的成员。</p>
+<h3 id="反射常用的Api"><a href="#反射常用的Api" class="headerlink" title="反射常用的Api"></a>反射常用的Api</h3><h4 id="获取class"><a href="#获取class" class="headerlink" title="获取class"></a>获取class</h4><ol>
+<li>通过对象.getClass()</li>
+<li>类.class</li>
+<li>Class.forName()</li>
+</ol>
+<pre><code class="Java">//第一种获取class方式，通过对象获取
+User user1 = new User();
+Class aClass1 = user1.getClass();
+
+//第二种获取class方式，通过类获取
+Class aClass2 = User.class;
+
+//第三种获取class方式，通过类的完整路径，包路径+类名
+Class aClass3 = Class.forName(&quot;Test.User&quot;);
+System.out.println(aClass1 == aClass2);//true
+System.out.println(aClass1 == aClass3);//true
+</code></pre>
+<p>反射机制动态获取<code>class</code>信息内容，类的名称，方法，属性一个类对应一个<code>class</code>文件，不管通过什么渠道，获取的都应该是相同的</p>
+<h4 id="创建实例"><a href="#创建实例" class="headerlink" title="创建实例"></a>创建实例</h4><pre><code class="Java">Class aClass = Class.forName(&quot;Test.User&quot;);
+//通过无参数构造创建实例
+User user1 = (User)aClass.newInstance();
+System.out.println(user1);
+System.out.println(&quot;**********&quot;);
+//通过有参数构造创建实例
+Constructor constructor = aClass.getConstructor(String.class, Integer.class);
+User user2 = (User) constructor.newInstance(&quot;yukino&quot;, 23);
+System.out.println(user2);
+/**
+ * 输出:
+ *无参数构造
+ *User{name=&#39;null&#39;, age=null}
+ **********
+ *有参构造
+ *User{name=&#39;yukino&#39;, age=23}
+ */
+</code></pre>
+<h4 id="反射执行给属性赋值"><a href="#反射执行给属性赋值" class="headerlink" title="反射执行给属性赋值"></a>反射执行给属性赋值</h4><blockquote>
+<p>公有属性赋值</p>
+</blockquote>
+<pre><code class="Java">Class aClass = Class.forName(&quot;Test.User&quot;);
+User user = (User) aClass.newInstance();
+Field age = aClass.getField(&quot;age&quot;);
+age.set(user, 16);
+</code></pre>
+<blockquote>
+<p>私有属性</p>
+</blockquote>
+<pre><code class="Java">Class aClass = Class.forName(&quot;Test.User&quot;);
+User user = (User) aClass.newInstance();
+Field name = aClass.getField(&quot;name&quot;);//这句有问题
+name.set(user, &quot;yukino&quot;);
+/*
+Exception in thread &quot;main&quot; java.lang.NoSuchFieldException: name
+    at java.lang.Class.getField(Class.java:1703)
+    at Test.Main.main(Main.java:15)
+    对于私有属性aClass.getField(&quot;name&quot;);是获取不了的，需要使用getDeclaredFiled
+*/
+</code></pre>
+<pre><code class="Java">Class aClass = Class.forName(&quot;Test.User&quot;);
+User user = (User) aClass.newInstance();
+Field name = aClass.getDeclaredField(&quot;name&quot;);
+name.set(user, &quot;yukino&quot;);//这句有问题
+System.out.println(user);
+/*
+Exception in thread &quot;main&quot; java.lang.IllegalAccessException: Class Test.Main can not access a member of class Test.User with modifiers &quot;private&quot;
+    at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
+    at java.lang.reflect.AccessibleObject.slowCheckMemberAccess(AccessibleObject.java:296)
+    at java.lang.reflect.AccessibleObject.checkAccess(AccessibleObject.java:288)
+    at java.lang.reflect.Field.set(Field.java:761)
+    at Test.Main.main(Main.java:15)
+*/
+
+</code></pre>
+<pre><code class="Java">Class aClass = Class.forName(&quot;Test.User&quot;);
+User user = (User) aClass.newInstance();
+Field name = aClass.getDeclaredField(&quot;name&quot;);
+name.setAccessible(true);// 设置允许访问私有属性
+name.set(user, &quot;yukino&quot;);
+System.out.println(user);
+</code></pre>
+<h4 id="反射执行调用方法"><a href="#反射执行调用方法" class="headerlink" title="反射执行调用方法"></a>反射执行调用方法</h4><blockquote>
+<p>调用公有方法</p>
+</blockquote>
+<pre><code class="Java">Class aClass = Class.forName(&quot;Test.User&quot;);
+User user = (User) aClass.newInstance();
+Method publicToString = aClass.getDeclaredMethod(&quot;publicToString&quot;, String.class);
+System.out.println(publicToString.invoke(user, &quot;yukino&quot;));
+</code></pre>
+<blockquote>
+<p>调用私有方法</p>
+</blockquote>
+<pre><code class="Java">Method privateToString = aClass.getDeclaredMethod(&quot;privateToString&quot;, String.class);
+privateToString.setAccessible(true);// 设置允许访问私有属性
+System.out.println(privateToString.invoke(user, &quot;yukino&quot;));
+</code></pre>
+<h4 id="通过反射越过泛型检查"><a href="#通过反射越过泛型检查" class="headerlink" title="通过反射越过泛型检查"></a>通过反射越过泛型检查</h4><p>泛型用在编译期，编译过后泛型擦除（消失掉），所以是可以通过反射越过泛型检查的</p>
+<pre><code class="Java">ArrayList&lt;String&gt; strings = new ArrayList&lt;&gt;();
+strings.add(&quot;yukino&quot;);//编译期，类型为String
+//strings.add(1);
+Class&lt;? extends ArrayList&gt; aClass = strings.getClass();
+Method add = aClass.getDeclaredMethod(&quot;add&quot;, Object.class);
+add.invoke(strings, 1);
+System.out.println(strings.size());// 2
+
+        //System.out.println(strings.get(1));//抛异常
+//        strings.forEach(t -&gt; {//抛异常
+//            System.out.println(t);
+//        });
+/*
+2
+yukino
+Exception in thread &quot;main&quot; java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String
+    at java.util.ArrayList.forEach(ArrayList.java:1257)
+    at Test.Main.main(Main.java:22)
+/*
+
+</code></pre>
+<p>遍历会有类型转换异常</p>
+<h1 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h1><h2 id="注解概念"><a href="#注解概念" class="headerlink" title="注解概念"></a>注解概念</h2><h3 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h3><p>注解用来给类声明附加额外信息，可以标注在类、字段、方法等上面，编译器、JVM以及开发人员等都可以通过反射拿到注解信息，进而做一些相关处理</p>
+<h3 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h3><p><code>@Override</code>  只能标注在子类覆盖父类的方法上面，有提示的作用</p>
+<p><code>@Deprecated</code>   标注在过时的方法或类上面，有提示的作用</p>
+<p><code>@SuppressWarnings(&quot;unchecked&quot;)</code>标注在编译器认为有问题的类、方法等上面，用来取消编译器的警告提示，警告类型有<code>serial、unchecked、unused、all</code></p>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><p>元注解用来在声明新注解时指定新注解的一些特性</p>
+<p><code>@Target</code>指定新注解标注的位置，比如类、字段、方法等，取值有<code>ElementType.Method</code>等</p>
+<p><code>@Retention</code> 指定新注解的信息保留到什么时候，取值有<code>RetentionPolicy.RUNTIME</code>等</p>
+<p><code>@Inherited</code>指定新注解标注在父类上时可被子类继承</p>
+<h3 id="常用元注解"><a href="#常用元注解" class="headerlink" title="常用元注解"></a>常用元注解</h3><p><code>@Target(ElementType.METHOD)</code> // 指定新注解可以标注在方法上</p>
+<p><code>@Target(ElementType.TYPE)</code> // 指定新注解可以标注在类上</p>
+<p><code>@Target(ElementType.FILED)</code> // 指定新注解可以标注在属性上</p>
+<p><code>@Target(ElementType.METHOD, ElementType.TYPE)</code>// 指定新注解可以标注在类方法上</p>
+<p><code>@Retention(RetentionPolicy.RUNTIME)</code>// 指定新注解保留到程序运行时期</p>
+<p><code>@Inherited</code>// 指定新注解标注在父类上时可被子类继承</p>
+<pre><code class="Java">public @interface MayiktName {
+  public String name();
+
+}
+</code></pre>
+<p>自定义注解 运行 ：反射+<code>aop</code></p>
+<h3 id="注解的Target"><a href="#注解的Target" class="headerlink" title="注解的Target"></a>注解的Target</h3><p><code>TYPE</code>：类、接口（包括注解类型）和枚举的声明</p>
+<p><code>FIELD</code>：字段声明（包括枚举常量）</p>
+<p><code>METHOD</code>：方法声明</p>
+<p><code>PARAMETER</code>：参数声明</p>
+<p><code>CONSTRUCTOR</code>：构造函数声明</p>
+<p><code>LOCAL_VARIABLE</code>：本地变量声明</p>
+<p><code>ANNOTATION_TYPE</code>：注解类型声明</p>
+<p><code>PACKAGE</code>：包声明</p>
+<p><code>TYPE_PARAMETER</code>：类型参数声明，JavaSE8引进，可以应用于类的泛型声明之处</p>
+<p><code>TYPE_USE</code>：<code>JavaSE8</code>引进，此类型包括类型声明和类型参数声明</p>
+<h2 id="获取注解信息"><a href="#获取注解信息" class="headerlink" title="获取注解信息"></a>获取注解信息</h2><pre><code class="Java">@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TestAnnotation {
+    String name() default &quot;&quot;;
+    double token() default 20;
+}
+</code></pre>
+<pre><code class="Java">package Test;
+import Test.annotation.TestAnnotation;
+@TestAnnotation(name = &quot;yukino&quot;, token = 1)
+public class User {
+    @TestAnnotation(name = &quot;yukino&quot;, token = 1)
+    private String name;
+    public Integer age;
+
+    @TestAnnotation(name = &quot;yukino&quot;, token = 1)
+    public String getName() {
+        return name;
+    }
+
+}
+</code></pre>
+<pre><code class="Java">//1.获取类上的注解
+Class&lt;?&gt; aClass = Class.forName(&quot;Test.User&quot;);
+TestAnnotation declaredAnnotation = aClass.getDeclaredAnnotation(TestAnnotation.class);
+System.out.println(declaredAnnotation);//@Test.annotation.TestAnnotation(name=yukino, token=1.0)
+//2.获取当前方法上的注解
+Method getName = aClass.getDeclaredMethod(&quot;getName&quot;);
+TestAnnotation declaredAnnotation1 = getName.getDeclaredAnnotation(TestAnnotation.class);
+System.out.println(declaredAnnotation1);
+//同理获取构造方法的注解和字段上的注解
+</code></pre>
+<h2 id="注解如何生效"><a href="#注解如何生效" class="headerlink" title="注解如何生效"></a>注解如何生效</h2><p>实际项目中 注解想生效通过反射+aop机制</p>
+<h2 id="注解实现案例"><a href="#注解实现案例" class="headerlink" title="注解实现案例"></a>注解实现案例</h2><h3 id="自定义限流注解"><a href="#自定义限流注解" class="headerlink" title="自定义限流注解"></a>自定义限流注解</h3><h4 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h4><pre><code class="Java">&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.2.1.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
+&lt;dependencies&gt;
+    &lt;!--  springboot 整合web组件--&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.google.guava&lt;/groupId&gt;
+        &lt;artifactId&gt;guava&lt;/artifactId&gt;
+        &lt;version&gt;18.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+        &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+        &lt;version&gt;3.12.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+&lt;/dependencies&gt;
+</code></pre>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><blockquote>
+<p>定义注解</p>
+</blockquote>
+<pre><code class="Java">package com.yukino.annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD, ElementType.CONSTRUCTOR})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TestAnnotation {
+    String name() default &quot;&quot;;
+    double token() default 20;
+}
+</code></pre>
+<blockquote>
+<p>定义AOP</p>
+</blockquote>
+<pre><code class="Java">package com.yukino.aop;
+import com.google.common.util.concurrent.RateLimiter;
+import com.yukino.annotation.TestAnnotation;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ConcurrentHashMap;
+
+@Aspect
+@Component
+public class CurrentLimitAop {
+    /**
+     * 每秒生成1.0个令牌
+     * //
+     */
+
+    private ConcurrentHashMap&lt;String, RateLimiter&gt; rateLimiters = new ConcurrentHashMap&lt;&gt;();
+    /**
+     * 前置
+     *
+     */
+    @Before(value = &quot;@annotation(com.yukino.annotation.TestAnnotation)&quot;)
+    public void before() {
+        System.out.println(&quot;===============前置通知==============&quot;);
+    }
+
+
+    @AfterReturning(value = &quot;@annotation(com.yukino.annotation.TestAnnotation)&quot;)
+    public void afterReturning() {
+        System.out.println(&quot;===============后置通知==============&quot;);
+    }
+    /**
+     * @param joinPoint
+     * @return
+     * @Around(value = &quot;@annotation(com.yukino.annotation.TestAnnotation)&quot;)
+     * 只要使用TestAnnotation注解就会被拦截。
+     */
+    @Around(value = &quot;@annotation(com.yukino.annotation.TestAnnotation)&quot;)
+    public Object around(ProceedingJoinPoint joinPoint) {
+
+        // 走该环绕通知
+        try {
+            //获取拦截的方法名
+            Signature sig = joinPoint.getSignature();
+            //获取拦截的方法名
+            MethodSignature methodSignature = (MethodSignature) sig;
+            TestAnnotation testAnnotation = methodSignature.getMethod().getDeclaredAnnotation(TestAnnotation.class);
+            // 获取到该注解的name
+            String name = testAnnotation.name();
+            // 获取该注解的token
+            double token = testAnnotation.token();
+            // 判断该名称是否有创建RateLimiter
+            RateLimiter rateLimiter = rateLimiters.get(name);
+            if (rateLimiter == null) {
+                rateLimiter = RateLimiter.create(token);
+                rateLimiters.put(name, rateLimiter);
+            }
+            /**
+             * 如果被限流的话
+             */
+            boolean result = rateLimiter.tryAcquire();
+            if (!result) {
+                return &quot;当前访问人数过多，请稍后重试!&quot;;
+            }
+            System.out.println(&quot;===============环绕通知开始==============&quot;);
+            Object proceedResult = joinPoint.proceed();// 目标方法   public String get() {}
+            System.out.println(&quot;===============环绕通知结束==============&quot;);
+            return proceedResult;
+        } catch (Throwable throwable) {
+            return &quot;系统错误!&quot;;
+        }
+
+    }
+}
+</code></pre>
+<blockquote>
+<p>controller</p>
+</blockquote>
+<pre><code class="Java">package com.yukino.Service;
+
+import com.yukino.annotation.TestAnnotation;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class MemberService {
+    private String userName;
+
+    /**
+     * 每秒生成1.0个令牌
+     * //
+     */
+    @GetMapping(&quot;/get&quot;)
+    @TestAnnotation(name = &quot;get&quot;, token = 1)
+    public String get() {
+//        boolean result = rateLimiter.tryAcquire();
+//        if (!result) {
+//            return &quot;当前访问人数过多，请稍后重试!&quot;;
+//        }
+
+        System.out.println(&quot;===========方法体=========&quot;);
+        return &quot;my is get&quot;;
+    }
+
+    @GetMapping(&quot;/add&quot;)
+    @TestAnnotation(name = &quot;add&quot;, token = 10)
+    public String add() {
+        return &quot;my is add&quot;;
+    }
+
+    @GetMapping(&quot;/my&quot;)
+    public String my() {
+        return &quot;my is add&quot;;
+    }
+}
+</code></pre>
+<blockquote>
+<p>关键点</p>
+</blockquote>
+<ol>
+<li>定义注解</li>
+<li>将注解加在方法上</li>
+<li>使用环绕通知，查找目标注解是否存在，存在的方法，获取注解的参数，进行一系列操作</li>
+</ol>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>上面程序会程序调试窗口打印</p>
+<pre><code class="Java">===============环绕通知开始==============
+===============前置通知==============
+===========方法体=========
+===============后置通知==============
+===============环绕通知结束==============
+</code></pre>
+<pre><code class="shell">环绕通知开始 -&gt; 前置通知 -&gt; 方法体 -&gt;后置通知-&gt; 环绕结束
+</code></pre>
+<pre><code class="Java">System.out.println(&quot;===============环绕通知开始==============&quot;);
+Object proceedResult = joinPoint.proceed();// 目标方法   public String get() {}
+System.out.println(&quot;===============环绕通知结束==============&quot;);
+</code></pre>
+<p>环绕通知里面调用<code>joinPoint.proceed()</code> 方法，如果<code>bypass</code>此方法，则不会执行前置通知和后置通知</p>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/appreciation/aplipay.png"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+        
+          
+            <div class="post-nepre full next">
+          
+            <a href="/2021/07/05/技术/Java8新特性/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                Java8新特性</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
       
-  <!-- 首页默认取最最新文章集 -->
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/20/技术/拦截器-Interceptor/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/3.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-20 01:10</div>
-      <a href="/2020/10/20/技术/拦截器-Interceptor/" class="post-title">
-        <h3>拦截器-Interceptor</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/Spring-MVC/">Spring MVC<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>拦截器-Interceptor</p>
-        <div class="post-bottom">
-          <a href="/2020/10/20/技术/拦截器-Interceptor/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/19/技术/Restful/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/18.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-19 21:10</div>
-      <a href="/2020/10/19/技术/Restful/" class="post-title">
-        <h3>Restful风格</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/Spring-MVC/">Spring MVC<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>Restful风格</p>
-        <div class="post-bottom">
-          <a href="/2020/10/19/技术/Restful/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/18/技术/Spring MVC/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/4.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-18 21:10</div>
-      <a href="/2020/10/18/技术/Spring MVC/" class="post-title">
-        <h3>Spring MVC</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/Spring-MVC/">Spring MVC<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>Spring MVC</p>
-        <div class="post-bottom">
-          <a href="/2020/10/18/技术/Spring MVC/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/18/技术/Spring 事务管理/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/22.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-18 15:10</div>
-      <a href="/2020/10/18/技术/Spring 事务管理/" class="post-title">
-        <h3>Spring 事务管理</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/spring/">spring<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>Spring 事务管理</p>
-        <div class="post-bottom">
-          <a href="/2020/10/18/技术/Spring 事务管理/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/17/技术/JDBC Template/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/12.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-17 14:10</div>
-      <a href="/2020/10/17/技术/JDBC Template/" class="post-title">
-        <h3>JDBC Template</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/spring/">spring<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>JDBC Template</p>
-        <div class="post-bottom">
-          <a href="/2020/10/17/技术/JDBC Template/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/14/技术/桥接模式/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/17.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-14 00:10</div>
-      <a href="/2020/10/14/技术/桥接模式/" class="post-title">
-        <h3>桥接模式</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/设计模式/">设计模式<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>桥接模式</p>
-        <div class="post-bottom">
-          <a href="/2020/10/14/技术/桥接模式/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/08/技术/适配器模式/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/8.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-8 23:10</div>
-      <a href="/2020/10/08/技术/适配器模式/" class="post-title">
-        <h3>适配器模式</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/设计模式/">设计模式<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>适配器模式</p>
-        <div class="post-bottom">
-          <a href="/2020/10/08/技术/适配器模式/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/08/技术/建造者模式/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/23.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-8 11:10</div>
-      <a href="/2020/10/08/技术/建造者模式/" class="post-title">
-        <h3>建造者模式</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/设计模式/">设计模式<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>建造者模式</p>
-        <div class="post-bottom">
-          <a href="/2020/10/08/技术/建造者模式/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/07/技术/原型模式/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/7.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-7 22:10</div>
-      <a href="/2020/10/07/技术/原型模式/" class="post-title">
-        <h3>原型模式</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/设计模式/">设计模式<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>原型模式</p>
-        <div class="post-bottom">
-          <a href="/2020/10/07/技术/原型模式/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-thumb">
-    <a href="/2020/10/07/技术/工厂模式/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/article_cover/7.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2020-10-7 14:10</div>
-      <a href="/2020/10/07/技术/工厂模式/" class="post-title">
-        <h3>工厂模式</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/设计模式/">设计模式<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/技术/">技术</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p>工厂模式</p>
-        <div class="post-bottom">
-          <a href="/2020/10/07/技术/工厂模式/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4asHXF3SLvCKEfXTHBmYKjpi-MdYXbMMI",
+        appKey: "xXS4NNFP7X7Su7AIwt86pHXj",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
 
-
-    </main>
-      <!-- 首页默认取最最新文章集 -->
-    <!-- 
-      <nav class="navigator">
-        
-        <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-back"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="iconfont icon-right"></i></a>
-      </nav>
-     -->
-  </div>
-  
-    <div id="pagination"><a href="/page/3/" class="">Previous</a></div>
-  
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/#" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/Yukino831143/CDN/img/yukino/avatar/a26.ico" itemprop="image" alt="Yukino" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/#" itemprop="url" rel="author">Yukino</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
+
+
 
     </div> 
     <!--站内搜索模块-->   

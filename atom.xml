@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2021-07-04T16:52:19.343Z</updated>
+  <updated>2021-07-08T14:23:45.214Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>反射与自定义注解</title>
+    <link href="/2021/07/08/%E6%8A%80%E6%9C%AF/Java%E5%8F%8D%E5%B0%84%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/"/>
+    <id>/2021/07/08/技术/Java反射与自定义注解/</id>
+    <published>2021-07-08T14:20:00.000Z</published>
+    <updated>2021-07-08T14:23:45.214Z</updated>
+    
+    <summary type="html">
+    
+      反射与自定义注解
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="反射与自定义注解" scheme="/tags/%E5%8F%8D%E5%B0%84%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/"/>
+    
+  </entry>
   
   <entry>
     <title>Java8新特性</title>
@@ -386,26 +406,6 @@
     <summary type="html">
     
       工厂模式
-    
-    </summary>
-    
-      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-    
-      <category term="设计模式" scheme="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>单例模式</title>
-    <link href="/2020/10/06/%E6%8A%80%E6%9C%AF/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
-    <id>/2020/10/06/技术/单例模式/</id>
-    <published>2020-10-06T14:28:00.000Z</published>
-    <updated>2021-02-18T15:06:58.988Z</updated>
-    
-    <summary type="html">
-    
-      单例模式
     
     </summary>
     
